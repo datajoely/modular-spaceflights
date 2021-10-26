@@ -38,10 +38,10 @@ def _parse_percentage(column: pd.Series) -> pd.Series:
     return column_as_float_pct
 
 
-def _parse_money(x):
-    x = x.str.replace("$", "").str.replace(",", "")
-    x = x.astype(float)
-    return x
+def _parse_money(column: pd.Series) -> pd.Series:
+    column_no_symbols = column.str.replace("[\$,]", "", regex=True)
+    column_as_float = column_no_symbols.astype(float)
+    return column_as_float
 
 
 def preprocess_companies(companies: pd.DataFrame) -> pd.DataFrame:
