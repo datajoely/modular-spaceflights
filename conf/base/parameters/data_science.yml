@@ -10,5 +10,5 @@ features:
   - company_rating
   - review_scores_rating
 regression_kind:
-  simple: 'linear'
-  complex: 'logistic'
+  simple: linear
+  complex: isotonic
