@@ -39,7 +39,7 @@ def _parse_percentage(column: pd.Series) -> pd.Series:
 
 
 def _parse_money(column: pd.Series) -> pd.Series:
-    column_no_symbols = column.str.replace("[\$,]", "", regex=True)
+    column_no_symbols = column.str.replace(r"[\$,]", "", regex=True)
     column_as_float = column_no_symbols.astype(float)
     return column_as_float
 

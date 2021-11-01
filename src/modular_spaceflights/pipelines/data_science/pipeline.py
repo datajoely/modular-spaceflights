@@ -41,7 +41,7 @@ def create_pipeline(**kwargs):
             ),
             node(
                 func=train_model,
-                inputs=["X_train", "y_train", "params:regression_kind.complex"],
+                inputs=["X_train", "y_train", "params:dummy_model_options"],
                 outputs="regressor",
                 name="train_model_node",
             ),

@@ -25,13 +25,11 @@
 #
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import importlib
 import logging
-from typing import Dict, Tuple, Union
+from typing import Any, Dict, Tuple
 
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.isotonic import IsotonicRegression
-from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 
@@ -54,8 +52,8 @@ def split_data(data: pd.DataFrame, parameters: Dict) -> Tuple:
 
 
 def train_model(
-    X_train: pd.DataFrame, y_train: pd.Series, regression_kind: str
-) -> Union[LinearRegression, IsotonicRegression]:
+    X_train: pd.DataFrame, y_train: pd.Series, model_options: Dict[str, Any]
+) -> Any:
     """Trains the linear regression model.
 
     Args:
@@ -65,21 +63,28 @@ def train_model(
     Returns:
         Trained model.
     """
-    if regression_kind == "linear":
-        regressor = LinearRegression()
-    elif regression_kind == "isotonic":
-        regressor = IsotonicRegression()
-    else:
-        raise ValueError(
-            'Parameter "model_kind" can only be one of ("linear", "isotonic") got %s instead',
-            regression_kind,
-        )
-    regressor.fit(X_train, y_train)
-    return regressor
+
+    
+    module_name = model_options.get("module")
+    class_name = model_options.get("class")
+    
+    try:
+        regressor_class = getattr(importlib.import_module(module_name), class_name)
+    except (ModuleNotFoundError, AttributeError) as e:
+        raise ImportError(
+            f"Cannot import '{module_name}.{class_name}', please check "
+        "spelling and installed dependencies.")
+
+    regressor_instance = regressor_class(**model_options.get("kwargs"))
+    logger = logging.getLogger(__name__)
+    logger.info(f"Fitting model of type {type(regressor_instance)}")
+
+    regressor_instance.fit(X_train, y_train)
+    return regressor_instance
 
 
 def evaluate_model(
-    regressor: Union[LinearRegression, IsotonicRegression],
+    regressor: Any,
     X_test: pd.DataFrame,
     y_test: pd.Series,
 ):
@@ -94,7 +99,6 @@ def evaluate_model(
     score = r2_score(y_test, y_pred)
     logger = logging.getLogger(__name__)
     logger.info(
-        "Model has a coefficient R^2 of %.3f on test data using a regressor of type '%s'",
-        score,
-        type(regressor),
+        f"Model has a coefficient R^2 of {score:.3f} on test data using a"
+        " regressor of type '{type(regressor)}'"
     )
