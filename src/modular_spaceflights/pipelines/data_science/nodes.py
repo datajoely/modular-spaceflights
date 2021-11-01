@@ -27,9 +27,11 @@
 # limitations under the License.
 import importlib
 import logging
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, Union
 
 import pandas as pd
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 
@@ -53,7 +55,7 @@ def split_data(data: pd.DataFrame, parameters: Dict) -> Tuple:
 
 def train_model(
     X_train: pd.DataFrame, y_train: pd.Series, model_options: Dict[str, Any]
-) -> Any:
+) -> Union[LinearRegression, RandomForestRegressor]:
     """Trains the linear regression model.
 
     Args:
@@ -63,17 +65,16 @@ def train_model(
     Returns:
         Trained model.
     """
-
-    
     module_name = model_options.get("module")
     class_name = model_options.get("class")
-    
+
     try:
         regressor_class = getattr(importlib.import_module(module_name), class_name)
-    except (ModuleNotFoundError, AttributeError) as e:
+    except (ModuleNotFoundError, AttributeError):
         raise ImportError(
             f"Cannot import '{module_name}.{class_name}', please check "
-        "spelling and installed dependencies.")
+            "spelling and installed dependencies."
+        )
 
     regressor_instance = regressor_class(**model_options.get("kwargs"))
     logger = logging.getLogger(__name__)
@@ -84,7 +85,7 @@ def train_model(
 
 
 def evaluate_model(
-    regressor: Any,
+    regressor: Union[LinearRegression, RandomForestRegressor],
     X_test: pd.DataFrame,
     y_test: pd.Series,
 ):
