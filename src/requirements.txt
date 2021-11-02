@@ -73,6 +73,8 @@ entrypoints==0.3
     # via
     #   jupyterlab-server
     #   nbconvert
+et-xmlfile==1.1.0
+    # via openpyxl
 fastapi==0.66.1
     # via kedro-viz
 flake8==3.9.2
@@ -185,7 +187,7 @@ kedro-telemetry==0.1.2
     # via -r /Users/joel_schwarzmann/Documents/projects/modular-spaceflights/src/requirements.in
 kedro-viz==3.17.1
     # via -r /Users/joel_schwarzmann/Documents/projects/modular-spaceflights/src/requirements.in
-kedro[pandas.csvdataset,pandas.exceldataset]==0.17.5
+kedro[pandas.csvdataset,pandas.exceldataset,pandas.parquetdataset]==0.17.5
     # via
     #   -r /Users/joel_schwarzmann/Documents/projects/modular-spaceflights/src/requirements.in
     #   kedro-telemetry
@@ -231,8 +233,11 @@ notebook==6.4.5
 numpy==1.21.3
     # via
     #   pandas
+    #   pyarrow
     #   scikit-learn
     #   scipy
+openpyxl==3.0.9
+    # via -r /Users/joel_schwarzmann/Documents/projects/modular-spaceflights/src/requirements.in
 packaging==21.0
     # via
     #   bleach
@@ -277,6 +282,8 @@ ptyprocess==0.7.0
     #   terminado
 py==1.10.0
     # via pytest
+pyarrow==3.0.0
+    # via kedro
 pycodestyle==2.7.0
     # via flake8
 pycparser==2.20
