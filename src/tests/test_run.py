@@ -1,4 +1,3 @@
-
 """
 This module contains an example test.
 
