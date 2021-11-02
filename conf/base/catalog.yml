@@ -57,21 +57,22 @@ shuttles:
   layer: raw
   load_args:
     engine: openpyxl
+    nrows: 200
 
-preprocessed_companies:
-  type: pandas.CSVDataSet
-  filepath: data/02_intermediate/preprocessed_companies.csv
+data_processing.typed_companies:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/typed_companies.pq
   layer: intermediate
 
-preprocessed_shuttles:
-  type: pandas.CSVDataSet
-  filepath: data/02_intermediate/preprocessed_shuttles.csv
+data_processing.typed_shuttles:
+  type: pandas.ParquetDataSet
+  filepath: data/02_intermediate/typed_shuttles.pq
   layer: intermediate
 
-model_input_table:
-  type: pandas.CSVDataSet
-  filepath: data/03_primary/model_input_table.csv
-  layer: primary
+data_processing.model_input_table:
+  type: pandas.ParquetDataSet
+  filepath: data/03_primary/model_input_table.pq
+  layer: model_input
 
 regressor:
   type: pickle.PickleDataSet
