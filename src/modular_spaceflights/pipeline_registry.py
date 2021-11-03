@@ -31,7 +31,7 @@ from typing import Dict
 
 from kedro.pipeline import Pipeline, pipeline
 
-from modular_spaceflights.pipelines import data_processing as dp
+from modular_spaceflights.pipelines import data_ingestion as di
 from modular_spaceflights.pipelines import data_science as ds
 
 
@@ -42,30 +42,35 @@ def register_pipelines() -> Dict[str, Pipeline]:
         A mapping from a pipeline name to a ``Pipeline`` object.
 
     """
-    data_processing_pipeline = pipeline(
-        dp.create_pipeline(),
-        namespace="data_processing",
+    data_ingestion_pipeline = pipeline(
+        di.create_pipeline(),
+        namespace="data_ingestion",
         inputs={"reviews", "shuttles", "companies"},
-        outputs={"model_input_table"},
+        outputs={"prm_shuttle_company_reviews"},
     )
 
-    linear_pipeline = pipeline(
+    feature_engineering_pipeline = pipeline(
+        
+    )
+
+    model_linear_pipeline = pipeline(
         ds.create_pipeline(),
         inputs={"model_input_table"},
         parameters={"params:dummy_model_options": "params:model_options.linear"},
         namespace="data_science.linear_regression",
     )
-    complex_pipeline = pipeline(
+    model_rf_pipeline = pipeline(
         ds.create_pipeline(),
         inputs={"model_input_table"},
         parameters={"params:dummy_model_options": "params:model_options.random_forest"},
         namespace="data_science.random_forest",
     )
 
-    modelling_pipeline = linear_pipeline + complex_pipeline
+    modelling_pipeline = model_linear_pipeline + model_rf_pipeline
 
     return {
-        "__default__": data_processing_pipeline + modelling_pipeline,
-        "dp": data_processing_pipeline,
-        "ds": linear_pipeline + complex_pipeline,
+        "__default__": data_ingestion_pipeline + feature_engineering_pipeline +  modelling_pipeline,
+        "di": data_ingestion_pipeline,
+        "fe": feature_engineering_pipeline,
+        "ds": modelling_pipeline,
     }

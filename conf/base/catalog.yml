@@ -59,20 +59,30 @@ shuttles:
     engine: openpyxl
     nrows: 200
 
-data_processing.typed_companies:
+data_processing.int_typed_companies:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/typed_companies.pq
   layer: intermediate
 
-data_processing.typed_shuttles:
+data_processing.int_typed_shuttles:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/typed_shuttles.pq
   layer: intermediate
 
-data_processing.model_input_table:
+data_processing.int_typed_reviews:
   type: pandas.ParquetDataSet
-  filepath: data/03_primary/model_input_table.pq
-  layer: model_input
+  filepath: data/02_intermediate/typed_reviews.pq
+  layer: intermediate
+
+data_processing.prm_agg_companies:
+  type: pandas.ParquetDataSet
+  filepath: data/03_primary/prm_agg_companies.pq
+  layer: intermediate
+
+data_processing.prm_shuttle_company_reviews:
+  type: pandas.ParquetDataSet
+  filepath: data/03_primary/prm_shuttle_company_reviews.pq
+  layer: primary
 
 regressor:
   type: pickle.PickleDataSet
