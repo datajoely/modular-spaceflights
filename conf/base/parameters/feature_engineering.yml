@@ -3,3 +3,22 @@
 #
 # Documentation for this file format can be found in "Parameters"
 # Link: https://kedro.readthedocs.io/en/0.17.5/04_kedro_project_setup/02_configuration.html#parameters
+
+
+
+feature_scale:
+  pairs:
+    - ['number_of_reviews', 'total_fleet_count']
+    - ['passenger_capacity', 'total_fleet_count']
+    - ['price', 'total_fleet_count']
+    - ['engines', 'total_fleet_count']
+  np_method: 'divide'
+  col_descriptor: 'over'
+
+feature_weighting:
+  pairs:
+    - ['price', 'company_rating']
+    - ['reviews_per_month', 'company_rating']
+    - ['number_of_reviews', 'company_rating']
+  np_method: 'multiply'
+  col_descriptor: 'over'

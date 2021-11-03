@@ -30,6 +30,6 @@ This is a boilerplate pipeline 'feature_engineering'
 generated using Kedro 0.17.5
 """
 
-from .pipeline import create_pipeline
+from .pipeline import create_feature_pipeline, combine_features_pipeline
 
-__all__ = ["create_pipeline"]
+__all__ = ["create_feature_pipeline"]

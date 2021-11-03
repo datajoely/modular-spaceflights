@@ -2,6 +2,8 @@ from typing import List
 import pandas as pd
 import numpy as np
 
+from pandas.core.reshape import merge
+
 
 def _is_true(column: pd.Series) -> pd.Series:
     return column == "t"
@@ -112,4 +114,20 @@ def combine_shuttle_level_information(
     )
     combined_table = rated_shuttles.merge(companies, on="company_id", how="inner")
 
-    return combined_table.dropna(how="any")
+    working_table = combined_table.dropna(how="any")
+    return working_table
+
+def create_spine_table(data: pd.DataFrame) -> pd.DataFrame:
+    """[summary]
+
+    Args:
+        data (pd.DataFrame): [description]
+
+    Returns:
+        pd.DataFrame: [description]
+    """
+    
+    all_columns = set(data.columns)
+    id_columns = {x for x in all_columns if x.endswith('_id')}
+    other_columns = all_columns - set(id_columns)
+    return data[sorted(id_columns) + sorted(other_columns)]

@@ -30,9 +30,12 @@
 from typing import Dict
 
 from kedro.pipeline import Pipeline, pipeline
+from modular_spaceflights import pipelines
 
 from modular_spaceflights.pipelines import data_ingestion as di
+from modular_spaceflights.pipelines import feature_engineering as fe
 from modular_spaceflights.pipelines import data_science as ds
+from modular_spaceflights.pipelines.feature_engineering.nodes import feature_maker
 
 
 def register_pipelines() -> Dict[str, Pipeline]:
@@ -46,31 +49,62 @@ def register_pipelines() -> Dict[str, Pipeline]:
         di.create_pipeline(),
         namespace="data_ingestion",
         inputs={"reviews", "shuttles", "companies"},
-        outputs={"prm_shuttle_company_reviews"},
+        outputs={"prm_spine_table"},
     )
 
-    feature_engineering_pipeline = pipeline(
-        
+    feature_engineering_scale_pipeline = pipeline(
+        fe.create_feature_pipeline(),
+        namespace="feature_engineering.scaling",
+        inputs={"prm_table": "prm_spine_table"},
+        parameters={"params:feature_type": "params:feature_scale"},
+        outputs={"feature_table": "feature_engineering.scaling.feat_scaled_metrics"},
+    )
+
+    feature_engineering_weight_pipeline = pipeline(
+        fe.create_feature_pipeline(),
+        namespace="feature_engineering.weighting",
+        inputs={"prm_table": "prm_spine_table"},
+        parameters={"params:feature_type": "params:feature_weighting"},
+        outputs={
+            "feature_table": "feature_engineering.weighting.feat_weighted_metrics"
+        },
+    )
+
+    feature_join_pipeline = pipeline(
+        fe.combine_features_pipeline(),
+        inputs={
+            "prm_spine_table": "prm_spine_table",
+            "feat_weighted_metrics": "feature_engineering.weighting.feat_weighted_metrics",
+            "feat_scaled_metrics": "feature_engineering.scaling.feat_scaled_metrics",
+        },
+        outputs="model_input_table",
     )
 
     model_linear_pipeline = pipeline(
         ds.create_pipeline(),
-        inputs={"model_input_table"},
+        inputs="model_input_table",
         parameters={"params:dummy_model_options": "params:model_options.linear"},
         namespace="data_science.linear_regression",
     )
+
     model_rf_pipeline = pipeline(
         ds.create_pipeline(),
-        inputs={"model_input_table"},
+        inputs="model_input_table",
         parameters={"params:dummy_model_options": "params:model_options.random_forest"},
         namespace="data_science.random_forest",
+    )
+
+    feature_pipeline = (
+        feature_engineering_scale_pipeline
+        + feature_engineering_weight_pipeline
+        + feature_join_pipeline
     )
 
     modelling_pipeline = model_linear_pipeline + model_rf_pipeline
 
     return {
-        "__default__": data_ingestion_pipeline + feature_engineering_pipeline +  modelling_pipeline,
+        "__default__": data_ingestion_pipeline + feature_pipeline + modelling_pipeline,
         "di": data_ingestion_pipeline,
-        "fe": feature_engineering_pipeline,
         "ds": modelling_pipeline,
+        "fe": feature_pipeline,
     }

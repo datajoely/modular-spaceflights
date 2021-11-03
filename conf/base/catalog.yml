@@ -59,33 +59,47 @@ shuttles:
     engine: openpyxl
     nrows: 200
 
-data_processing.int_typed_companies:
+int_typed_companies:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/typed_companies.pq
   layer: intermediate
 
-data_processing.int_typed_shuttles:
+int_typed_shuttles:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/typed_shuttles.pq
   layer: intermediate
 
-data_processing.int_typed_reviews:
+int_typed_reviews:
   type: pandas.ParquetDataSet
   filepath: data/02_intermediate/typed_reviews.pq
   layer: intermediate
 
-data_processing.prm_agg_companies:
+prm_agg_companies:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/prm_agg_companies.pq
   layer: intermediate
 
-data_processing.prm_shuttle_company_reviews:
+prm_shuttle_company_reviews:
   type: pandas.ParquetDataSet
   filepath: data/03_primary/prm_shuttle_company_reviews.pq
   layer: primary
 
-regressor:
-  type: pickle.PickleDataSet
-  filepath: data/06_models/regressor.pickle
-  versioned: true
-  layer: models
+prm_spine_table:
+  type: pandas.ParquetDataSet
+  filepath: data/03_primary/prm_spine_table.pq
+  layer: primary
+
+feature_engineering.weighting.feat_weighted_metrics:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/feat_weighted_metrics.pq
+  layer: feature
+
+feature_engineering.scaling.feat_scaled_metrics:
+  type: pandas.ParquetDataSet
+  filepath: data/04_feature/feat_scaled_metrics.pq
+  layer: feature
+
+model_input_table:
+  type: pandas.ParquetDataSet
+  filepath: data/05_model_input/model_input_table.pq
+  layer: model_input
