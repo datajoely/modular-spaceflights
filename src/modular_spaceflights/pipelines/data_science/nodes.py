@@ -32,8 +32,10 @@ def split_data(data: pd.DataFrame, parameters: Dict) -> Tuple:
 
     logger = logging.getLogger(__name__)
     logger.info(
-        f"Splitting data for the following independent variables {columns_in_scope} against "
-        f"the target of '{target_variable}' with a test sized of {test_size} and a random state of '{random_state}'"
+        f"Splitting data for the following independent variables "
+        f"{columns_in_scope} against the target of '{target_variable}' "
+        f"with a test sized of {test_size} and a random state of "
+        f"'{random_state}'"
     )
 
     X = data[columns_in_scope]
@@ -45,7 +47,7 @@ def split_data(data: pd.DataFrame, parameters: Dict) -> Tuple:
 
 
 def train_model(
-    X_train: pd.DataFrame, y_train: pd.Series, model_options: Dict[str,Any]
+    X_train: pd.DataFrame, y_train: pd.Series, model_options: Dict[str, Any]
 ) -> Union[LinearRegression, RandomForestRegressor]:
     """Trains the linear regression model.
 
@@ -57,17 +59,17 @@ def train_model(
         Trained model.
     """
 
-    model_type = model_options.get('class')
+    model_type = model_options.get("class")
 
-    acceptable_model_types = ['LinearRegression', 'RandomForestRegressor']
+    acceptable_model_types = ["LinearRegression", "RandomForestRegressor"]
     if model_type == acceptable_model_types[0]:
         regressor_class = LinearRegression
     elif model_type == acceptable_model_types[1]:
         regressor_class = RandomForestRegressor
     else:
         raise ValueError(
-            f"Please provide one of {acceptable_model_types} "
-            "as acceptable arguments"
+            f"Please provide one of {acceptable_model_types} " 
+            f"as acceptable arguments"
         )
 
     regressor_instance = regressor_class(**model_options.get("kwargs"))
@@ -94,6 +96,6 @@ def evaluate_model(
     score = r2_score(y_test, y_pred)
     logger = logging.getLogger(__name__)
     logger.info(
-        f"Model has a coefficient R^2 of {score:.3f} on test data using a"
-        f" regressor of type '{type(regressor)}'"
+        f"Model has a coefficient R^2 of {score:.3f} on test data using a "
+        f"regressor of type '{type(regressor)}'"
     )
