@@ -1,6 +1,8 @@
 test_size: 0.2
 random_state: 3
-features:
+target: "price"
+
+features_explicit:
   - engines
   - passenger_capacity
   - crew
@@ -9,14 +11,11 @@ features:
   - iata_approved
   - company_rating
   - review_scores_rating
-
-regression_kind:
-  simple: linear
-  complex: random-forest
+features_pattern:
+  - ^feat_
 
 model_options:
   linear:
-    module: sklearn.linear_model
     class: LinearRegression
     kwargs:
       fit_intercept: True
@@ -24,7 +23,6 @@ model_options:
       copy_X: True
       positive: False
   random_forest:
-    module: sklearn.ensemble
     class: RandomForestRegressor
     kwargs:
       n_estimators: 100
