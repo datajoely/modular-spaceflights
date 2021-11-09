@@ -1,4 +1,3 @@
-import importlib
 import logging
 from typing import Any, Dict, Tuple, Union
 
@@ -48,7 +47,7 @@ def split_data(data: pd.DataFrame, parameters: Dict) -> Tuple:
 
 def train_model(
     X_train: pd.DataFrame, y_train: pd.Series, model_options: Dict[str, Any]
-) -> Union[LinearRegression, RandomForestRegressor]:
+) -> Tuple[Union[LinearRegression, RandomForestRegressor], Dict[str, Any]]:
     """Trains the linear regression model.
 
     Args:
@@ -68,7 +67,7 @@ def train_model(
         regressor_class = RandomForestRegressor
     else:
         raise ValueError(
-            f"Please provide one of {acceptable_model_types} " 
+            f"Please provide one of {acceptable_model_types} "
             f"as acceptable arguments"
         )
 
@@ -77,14 +76,14 @@ def train_model(
     logger.info(f"Fitting model of type {type(regressor_instance)}")
 
     regressor_instance.fit(X_train, y_train)
-    return regressor_instance
+    return regressor_instance, model_options
 
 
 def evaluate_model(
     regressor: Union[LinearRegression, RandomForestRegressor],
     X_test: pd.DataFrame,
     y_test: pd.Series,
-):
+) -> Dict[str, float]:
     """Calculates and logs the coefficient of determination.
 
     Args:
@@ -99,3 +98,4 @@ def evaluate_model(
         f"Model has a coefficient R^2 of {score:.3f} on test data using a "
         f"regressor of type '{type(regressor)}'"
     )
+    return {"r2_score": score}

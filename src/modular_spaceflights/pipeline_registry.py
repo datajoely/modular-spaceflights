@@ -30,13 +30,11 @@
 from typing import Dict
 
 from kedro.pipeline import Pipeline, pipeline
-from modular_spaceflights import pipelines
 
 from modular_spaceflights.pipelines import data_ingestion as di
-from modular_spaceflights.pipelines import feature_engineering as fe
 from modular_spaceflights.pipelines import data_science as ds
+from modular_spaceflights.pipelines import feature_engineering as fe
 from modular_spaceflights.pipelines import reporting as rep
-from modular_spaceflights.pipelines.feature_engineering.nodes import feature_maker
 
 
 def register_pipelines() -> Dict[str, Pipeline]:
@@ -75,23 +73,42 @@ def register_pipelines() -> Dict[str, Pipeline]:
         fe.combine_features_pipeline(),
         inputs={
             "prm_spine_table": "prm_spine_table",
-            "feat_weighted_metrics": "feature_engineering.weighting.feat_weighted_metrics",
+            "feat_weighted_metrics": (
+                "feature_engineering.weighting.feat_weighted_metrics"
+            ),
             "feat_scaled_metrics": "feature_engineering.scaling.feat_scaled_metrics",
         },
         outputs="model_input_table",
     )
 
+    splitting_pipeline = ds.create_split_pipeline()
+
     model_linear_pipeline = pipeline(
-        ds.create_pipeline(),
-        inputs="model_input_table",
+        ds.create_train_evaluate_pipeline(),
         parameters={"params:dummy_model_options": "params:model_options.linear"},
+        inputs=[
+            "X_train",
+            "X_test",
+            "y_train",
+            "y_test",
+        ],
+        outputs={"model_params": "hyperparams_linear", "r2_score": "r2_score_linear"},
         namespace="data_science.linear_regression",
     )
 
     model_rf_pipeline = pipeline(
-        ds.create_pipeline(),
-        inputs="model_input_table",
+        ds.create_train_evaluate_pipeline(),
         parameters={"params:dummy_model_options": "params:model_options.random_forest"},
+        inputs=[
+            "X_train",
+            "X_test",
+            "y_train",
+            "y_test",
+        ],
+        outputs={
+            "model_params": "hyperparams_random_forest",
+            "r2_score": "r2_score_random_forest",
+        },
         namespace="data_science.random_forest",
     )
 
@@ -101,12 +118,20 @@ def register_pipelines() -> Dict[str, Pipeline]:
         + feature_join_pipeline
     )
 
-    modelling_pipeline = model_linear_pipeline + model_rf_pipeline
+    modelling_pipeline = splitting_pipeline + model_linear_pipeline + model_rf_pipeline
+
+    reporting_pipeline = rep.create_pipeline()
 
     return {
-        "__default__": data_ingestion_pipeline + feature_pipeline + modelling_pipeline + rep.create_pipeline(),
-        "di": data_ingestion_pipeline,
-        "ds": modelling_pipeline,
-        "fe": feature_pipeline,
-        "rep" : rep.create_pipeline(),
+        "__default__": (
+            data_ingestion_pipeline
+            + feature_pipeline
+            + modelling_pipeline
+            + reporting_pipeline
+        ),
+        "Data ingestion": data_ingestion_pipeline,
+        "Modelling stage": modelling_pipeline,
+        "Automated feature engineering": feature_pipeline,
+        "Reporting stage": reporting_pipeline,
+        "Split stage": splitting_pipeline,
     }

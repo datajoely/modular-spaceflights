@@ -1,12 +1,12 @@
 from kedro.pipeline import Pipeline, node
 
 from .nodes import (
-    combine_shuttle_level_information,
-    apply_types_to_companies,
-    apply_types_to_shuttles,
-    apply_types_to_reviews,
     aggregate_company_data,
-    create_spine_table
+    apply_types_to_companies,
+    apply_types_to_reviews,
+    apply_types_to_shuttles,
+    combine_shuttle_level_information,
+    create_spine_table,
 )
 
 

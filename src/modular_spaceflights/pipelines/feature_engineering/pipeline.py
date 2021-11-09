@@ -33,7 +33,10 @@ generated using Kedro 0.17.5
 
 from kedro.pipeline import Pipeline, node
 
-from modular_spaceflights.pipelines.feature_engineering.nodes import feature_maker, joiner
+from modular_spaceflights.pipelines.feature_engineering.nodes import (
+    feature_maker,
+    joiner,
+)
 
 
 def create_feature_pipeline(**kwargs):

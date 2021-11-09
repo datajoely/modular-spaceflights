@@ -30,10 +30,11 @@ This is a boilerplate pipeline 'feature_engineering'
 generated using Kedro 0.17.5
 """
 
-from typing import Callable, Dict, Any
-import pandas as pd
-import numpy as np
 from functools import reduce
+from typing import Any, Callable, Dict
+
+import numpy as np
+import pandas as pd
 
 
 def _create_feature(
@@ -86,16 +87,19 @@ def feature_maker(data: pd.DataFrame, feature_set: Dict[str, Any]) -> pd.DataFra
     # could be a reduce
     for column_a, column_b in feature_set.get("pairs"):
         data = _create_feature(
-            data=data, 
-            column_a=column_a, 
-            column_b=column_b, 
-            np_function=np_function, 
-            column_descriptor=col_descriptor
+            data=data,
+            column_a=column_a,
+            column_b=column_b,
+            np_function=np_function,
+            column_descriptor=col_descriptor,
         )
-    columns_to_retain = [x for x in data.columns if x.startswith('feat_') or x.endswith('_id')]
+    columns_to_retain = [
+        x for x in data.columns if x.startswith("feat_") or x.endswith("_id")
+    ]
     return data[columns_to_retain]
 
-def joiner(*dfs:pd.DataFrame) -> pd.DataFrame:
+
+def joiner(*dfs: pd.DataFrame) -> pd.DataFrame:
     """[summary]
 
     Returns:
@@ -103,7 +107,9 @@ def joiner(*dfs:pd.DataFrame) -> pd.DataFrame:
     """
     iter_dfs = iter(dfs)
     first_df = next(iter_dfs)
-    id_columns = [x for x in first_df.columns if x.endswith('_id')]
-    merged_dfs = reduce(lambda df, df2: df.merge(df2, on=id_columns, how='inner'), iter_dfs, first_df)
+    id_columns = [x for x in first_df.columns if x.endswith("_id")]
+    merged_dfs = reduce(
+        lambda df, df2: df.merge(df2, on=id_columns, how="inner"), iter_dfs, first_df
+    )
     assert first_df.shape[0] == merged_dfs.shape[0]
     return merged_dfs
