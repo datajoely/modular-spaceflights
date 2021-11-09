@@ -1,0 +1,15 @@
+r2_score_linear:
+  type: tracking.MetricsDataSet
+  filepath: ${base_location}/09_tracking/linear_score.json
+
+r2_score_random_forest:
+  type: tracking.MetricsDataSet
+  filepath: ${base_location}/09_tracking/rf_score.json
+
+hyperparams_linear:
+  type: tracking.JSONDataSet
+  filepath: ${base_location}/09_tracking/linear_params.json
+
+hyperparams_random_forest:
+  type: tracking.JSONDataSet
+  filepath: ${base_location}/09_tracking/rf_params.json

@@ -1,0 +1,24 @@
+price_histogram:
+  type: plotly.PlotlyDataSet
+  filepath: ${base_location}/08_reporting/price_histogram.json
+  layer: reporting
+  plotly_args:
+    type: histogram
+    fig:
+      x: price
+      color: engine_type
+
+cancellation_policy_breakdown:
+  type: plotly.PlotlyDataSet
+  filepath: ${base_location}/08_reporting/cancellation_breakdown.json
+  layer: reporting
+  plotly_args:
+    type: bar
+    fig:
+      x: company_location
+      y: price
+      color: cancellation_policy
+      log_y: True
+      labels:
+        price: 'fleet_price'
+  

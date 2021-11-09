@@ -1,8 +1,7 @@
-
 """Project hooks."""
 from typing import Any, Dict, Iterable, Optional
 
-from kedro.config import ConfigLoader
+from kedro.config import TemplatedConfigLoader
 from kedro.framework.hooks import hook_impl
 from kedro.io import DataCatalog
 from kedro.versioning import Journal
@@ -12,8 +11,10 @@ class ProjectHooks:
     @hook_impl
     def register_config_loader(
         self, conf_paths: Iterable[str], env: str, extra_params: Dict[str, Any]
-    ) -> ConfigLoader:
-        return ConfigLoader(conf_paths)
+    ) -> TemplatedConfigLoader:
+        return TemplatedConfigLoader(
+            conf_paths, globals_pattern="*globals.yml", globals_dict={}
+        )
 
     @hook_impl
     def register_catalog(

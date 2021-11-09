@@ -1,0 +1,14 @@
+int_typed_companies:
+  type: pandas.ParquetDataSet
+  filepath: ${base_location}/02_intermediate/typed_companies.pq
+  layer: intermediate
+
+int_typed_shuttles:
+  type: pandas.ParquetDataSet
+  filepath: ${base_location}/02_intermediate/typed_shuttles.pq
+  layer: intermediate
+
+int_typed_reviews:
+  type: pandas.ParquetDataSet
+  filepath: ${base_location}/02_intermediate/typed_reviews.pq
+  layer: intermediate
