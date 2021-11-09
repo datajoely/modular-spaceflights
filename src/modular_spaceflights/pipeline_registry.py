@@ -35,6 +35,7 @@ from modular_spaceflights import pipelines
 from modular_spaceflights.pipelines import data_ingestion as di
 from modular_spaceflights.pipelines import feature_engineering as fe
 from modular_spaceflights.pipelines import data_science as ds
+from modular_spaceflights.pipelines import reporting as rep
 from modular_spaceflights.pipelines.feature_engineering.nodes import feature_maker
 
 
@@ -103,8 +104,9 @@ def register_pipelines() -> Dict[str, Pipeline]:
     modelling_pipeline = model_linear_pipeline + model_rf_pipeline
 
     return {
-        "__default__": data_ingestion_pipeline + feature_pipeline + modelling_pipeline,
+        "__default__": data_ingestion_pipeline + feature_pipeline + modelling_pipeline + rep.create_pipeline(),
         "di": data_ingestion_pipeline,
         "ds": modelling_pipeline,
         "fe": feature_pipeline,
+        "rep" : rep.create_pipeline(),
     }

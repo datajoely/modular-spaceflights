@@ -1,6 +1,2 @@
-PlotlyDataSet
 New metrics dataset
-kedro pipeline create
-modular package 
-modular pull
-Fix the actual layers thing
+DS modular should share split stage, but deviate for training/evaluation
