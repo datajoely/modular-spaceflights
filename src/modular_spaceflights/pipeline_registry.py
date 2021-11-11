@@ -5,8 +5,8 @@ from typing import Dict
 from kedro.pipeline import Pipeline, pipeline
 
 from modular_spaceflights.pipelines import data_ingestion as di
-from modular_spaceflights.pipelines import data_science as ds
 from modular_spaceflights.pipelines import feature_engineering as fe
+from modular_spaceflights.pipelines import modelling as mod
 from modular_spaceflights.pipelines import reporting as rep
 
 
@@ -54,10 +54,10 @@ def register_pipelines() -> Dict[str, Pipeline]:
         outputs="model_input_table",
     )
 
-    splitting_pipeline = ds.create_split_pipeline()
+    splitting_pipeline = mod.create_split_pipeline()
 
     model_linear_pipeline = pipeline(
-        ds.create_train_evaluate_pipeline(),
+        mod.create_train_evaluate_pipeline(),
         parameters={"params:dummy_model_options": "params:model_options.linear"},
         inputs=[
             "X_train",
@@ -70,7 +70,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
     )
 
     model_rf_pipeline = pipeline(
-        ds.create_train_evaluate_pipeline(),
+        mod.create_train_evaluate_pipeline(),
         parameters={"params:dummy_model_options": "params:model_options.random_forest"},
         inputs=[
             "X_train",
