@@ -1,4 +1,3 @@
-
 """Command line tools for manipulating a Kedro project.
 Intended to be invoked via `kedro`."""
 from itertools import chain

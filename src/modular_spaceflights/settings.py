@@ -1,4 +1,3 @@
-
 """Project settings."""
 from modular_spaceflights.hooks import ProjectHooks
 
