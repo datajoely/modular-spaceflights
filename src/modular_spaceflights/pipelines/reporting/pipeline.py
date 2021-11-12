@@ -5,19 +5,24 @@ generated using Kedro 0.17.5
 
 from kedro.pipeline import Pipeline, node
 
-from modular_spaceflights.pipelines.reporting.nodes import generate_reports
+from modular_spaceflights.pipelines.reporting.nodes import (
+    make_cancel_policy_chart,
+    make_price_histogram,
+)
 
 
 def create_pipeline(**kwargs):
     return Pipeline(
         [
             node(
-                func=generate_reports,
-                inputs=["model_input_table"],
-                outputs=[
-                    "price_histogram",
-                    "cancellation_policy_breakdown",
-                ],
-            )
+                func=make_cancel_policy_chart,
+                inputs="model_input_table",
+                outputs="cancellation_policy_breakdown",
+            ),
+            node(
+                func=make_price_histogram,
+                inputs="model_input_table",
+                outputs="price_histogram",
+            ),
         ]
     )

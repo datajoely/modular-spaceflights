@@ -1,4 +1,4 @@
-price_histogram:
+reporting.price_histogram:
   type: plotly.PlotlyDataSet
   filepath: ${base_location}/08_reporting/price_histogram.json
   layer: reporting
@@ -6,9 +6,10 @@ price_histogram:
     type: histogram
     fig:
       x: price
+      log_x: True
       color: engine_type
 
-cancellation_policy_breakdown:
+reporting.cancellation_policy_breakdown:
   type: plotly.PlotlyDataSet
   filepath: ${base_location}/08_reporting/cancellation_breakdown.json
   layer: reporting

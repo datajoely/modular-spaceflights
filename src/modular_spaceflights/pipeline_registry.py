@@ -136,7 +136,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
 
     modelling_pipeline = splitting_pipeline + model_linear_pipeline + model_rf_pipeline
 
-    reporting_pipeline = pipeline(rep.create_pipeline(), inputs=["model_input_table"])
+    reporting_pipeline = pipeline(rep.create_pipeline(), inputs=["model_input_table"], namespace='reporting')
 
     return {
         "__default__": (
