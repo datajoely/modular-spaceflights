@@ -14,4 +14,3 @@ shuttles:
   layer: raw
   load_args:
     engine: openpyxl
-    nrows: 200

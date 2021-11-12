@@ -1,9 +1,9 @@
-feature_engineering.weighting.feat_weighted_metrics:
+feature_engineering.feat_weighting_metrics:
   type: pandas.ParquetDataSet
   filepath: ${base_location}/04_feature/feat_weighted_metrics.pq
   layer: feature
 
-feature_engineering.scaling.feat_scaled_metrics:
+feature_engineering.feat_scaling_metrics:
   type: pandas.ParquetDataSet
   filepath: ${base_location}/04_feature/feat_scaled_metrics.pq
   layer: feature

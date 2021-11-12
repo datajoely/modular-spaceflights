@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 import pandas as pd
@@ -97,7 +97,7 @@ def aggregate_company_data(typed_companies: pd.DataFrame) -> pd.DataFrame:
 
 def combine_shuttle_level_information(
     shuttles: pd.DataFrame, companies: pd.DataFrame, reviews: pd.DataFrame
-) -> pd.DataFrame:
+) -> Tuple[pd.DataFrame, pd.DataFrame]:
     """Combines all data to create a domain level primary table.
 
     Args:
@@ -114,20 +114,5 @@ def combine_shuttle_level_information(
     combined_table = rated_shuttles.merge(companies, on="company_id", how="inner")
 
     working_table = combined_table.dropna(how="any")
-    return working_table
-
-
-def create_spine_table(data: pd.DataFrame) -> pd.DataFrame:
-    """[summary]
-
-    Args:
-        data (pd.DataFrame): [description]
-
-    Returns:
-        pd.DataFrame: [description]
-    """
-
-    all_columns = set(data.columns)
-    id_columns = {x for x in all_columns if x.endswith("_id")}
-    other_columns = all_columns - set(id_columns)
-    return data[sorted(id_columns) + sorted(other_columns)]
+    id_columns = [x for x in working_table.columns if x.endswith('id')]
+    return working_table, working_table[id_columns]

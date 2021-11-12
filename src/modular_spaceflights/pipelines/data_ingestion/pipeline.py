@@ -6,7 +6,6 @@ from .nodes import (
     apply_types_to_reviews,
     apply_types_to_shuttles,
     combine_shuttle_level_information,
-    create_spine_table,
 )
 
 
@@ -41,13 +40,8 @@ def create_pipeline(**kwargs):
                     "reviews": "int_typed_reviews",
                     "companies": "prm_agg_companies",
                 },
-                outputs="prm_shuttle_company_reviews",
+                outputs=["prm_shuttle_company_reviews", "prm_spine_table"],
                 name="combine_step",
-            ),
-            node(
-                func=create_spine_table,
-                inputs="prm_shuttle_company_reviews",
-                outputs="prm_spine_table",
             ),
         ]
     )

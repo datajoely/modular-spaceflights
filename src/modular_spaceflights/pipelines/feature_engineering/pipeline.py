@@ -23,15 +23,16 @@ def create_feature_pipeline(**kwargs):
     )
 
 
-def combine_features_pipeline(**kwargs):
+def create_joining_pipeline(**kwargs):
     return Pipeline(
         [
             node(
                 func=joiner,
                 inputs=[
-                    "prm_spine_table",
-                    "feat_weighted_metrics",
-                    "feat_scaled_metrics",
+                    "spine_table",
+                    "static_features",
+                    "feature_1",
+                    "feature_2",
                 ],
                 outputs="model_input_table",
             )

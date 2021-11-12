@@ -6,19 +6,17 @@
 
 
 
-feature_scale:
+feature_scaling:
   pairs:
     - ['number_of_reviews', 'total_fleet_count']
     - ['passenger_capacity', 'total_fleet_count']
-    - ['price', 'total_fleet_count']
     - ['engines', 'total_fleet_count']
   np_method: 'divide'
   col_descriptor: 'over'
 
 feature_weighting:
   pairs:
-    - ['price', 'company_rating']
     - ['reviews_per_month', 'company_rating']
     - ['number_of_reviews', 'company_rating']
   np_method: 'multiply'
-  col_descriptor: 'over'
+  col_descriptor: 'by'

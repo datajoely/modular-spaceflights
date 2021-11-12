@@ -1,8 +1,3 @@
-prm_agg_companies:
-  type: pandas.ParquetDataSet
-  filepath: ${base_location}/03_primary/prm_agg_companies.pq
-  layer: intermediate
-
 prm_shuttle_company_reviews:
   type: pandas.ParquetDataSet
   filepath: ${base_location}/03_primary/prm_shuttle_company_reviews.pq
