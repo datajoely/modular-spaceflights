@@ -1,7 +1,7 @@
 """Project pipelines."""
-from typing import Dict, List
 from functools import reduce
 from operator import add
+from typing import Dict, List
 
 from kedro.pipeline import Pipeline, pipeline
 
@@ -9,12 +9,17 @@ from modular_spaceflights.pipelines import data_ingestion as di
 from modular_spaceflights.pipelines import feature_engineering as fe
 from modular_spaceflights.pipelines import modelling as mod
 from modular_spaceflights.pipelines import reporting as rep
-from modular_spaceflights.pipelines.feature_engineering.pipeline import (
-    create_joining_pipeline,
-)
 
 
 def new_ingestion_pipeline(raw_pipeline: Pipeline) -> Pipeline:
+    """[summary]
+
+    Args:
+        raw_pipeline (Pipeline): [description]
+
+    Returns:
+        Pipeline: [description]
+    """
     return pipeline(
         raw_pipeline,
         namespace="data_ingestion",  # provide inputs
@@ -26,7 +31,7 @@ def new_ingestion_pipeline(raw_pipeline: Pipeline) -> Pipeline:
     )
 
 
-def new_dynamic_feature_pipeline(
+def new_feature_eng_pipeline(
     template_feature_pipeline: Pipeline,
     combination_pipeline: Pipeline,
     metrics: List[str],
@@ -84,8 +89,58 @@ def new_dynamic_feature_pipeline(
     )
 
 
-def new_modeling_pipeline() -> Pipeline:
-    pass
+def new_train_eval_pipeline(
+    template_model_pipeline: Pipeline, model_type: str
+) -> Pipeline:
+    """[summary]
+
+    Args:
+        template_model_pipeline (Pipeline): [description]
+        model_type (str): [description]
+
+    Returns:
+        Pipeline: [description]
+    """
+    return pipeline(
+        template_model_pipeline,
+        parameters={"params:dummy_model_options": f"params:model_options.{model_type}"},
+        inputs=[
+            "X_train",
+            "X_test",
+            "y_train",
+            "y_test",
+        ],
+        outputs={
+            "model_params": f"hyperparams_{model_type}",
+            "r2_score": f"r2_score_{model_type}",
+        },
+        namespace=f"{model_type}",
+    )
+
+
+def new_modeling_pipeline(
+    split_pipeline: Pipeline, tain_eval_template: Pipeline, model_types: List[str]
+) -> Pipeline:
+
+    training_test_references = ["X_train", "X_test", "y_train", "y_test"]
+
+    split_stage_pipeline = pipeline(
+        split_pipeline,
+        inputs="model_input_table",
+        outputs=training_test_references,
+    )
+
+    model_pipelines = [
+        new_train_eval_pipeline(tain_eval_template, model) for model in model_types
+    ]
+    all_model_pipelines = pipeline(
+        reduce(add, model_pipelines),
+        namespace="train_evaluation",
+        inputs=training_test_references,
+    )
+
+    complete_model_pipeline = split_stage_pipeline + all_model_pipelines
+    return complete_model_pipeline
 
 
 def register_pipelines() -> Dict[str, Pipeline]:
@@ -95,59 +150,33 @@ def register_pipelines() -> Dict[str, Pipeline]:
         A mapping from a pipeline name to a ``Pipeline`` object.
 
     """
-    data_ingestion_pipeline = new_ingestion_pipeline(di.create_pipeline())
+    ingestion_pipeline = new_ingestion_pipeline(di.create_pipeline())
 
-    feature_pipeline = new_dynamic_feature_pipeline(
+    feature_pipeline = new_feature_eng_pipeline(
         template_feature_pipeline=fe.create_feature_pipeline(),
         combination_pipeline=fe.create_joining_pipeline(),
         metrics=["scaling", "weighting"],
     )
 
-    splitting_pipeline = mod.create_split_pipeline()
-
-    model_linear_pipeline = pipeline(
-        mod.create_train_evaluate_pipeline(),
-        parameters={"params:dummy_model_options": "params:model_options.linear"},
-        inputs=[
-            "X_train",
-            "X_test",
-            "y_train",
-            "y_test",
-        ],
-        outputs={"model_params": "hyperparams_linear", "r2_score": "r2_score_linear"},
-        namespace="data_science.linear_regression",
+    modelling_pipeline = new_modeling_pipeline(
+        split_pipeline=mod.create_split_pipeline(),
+        tain_eval_template=mod.create_train_evaluate_pipeline(),
+        model_types=["linear_regression", "random_forest"],
     )
 
-    model_rf_pipeline = pipeline(
-        mod.create_train_evaluate_pipeline(),
-        parameters={"params:dummy_model_options": "params:model_options.random_forest"},
-        inputs=[
-            "X_train",
-            "X_test",
-            "y_train",
-            "y_test",
-        ],
-        outputs={
-            "model_params": "hyperparams_random_forest",
-            "r2_score": "r2_score_random_forest",
-        },
-        namespace="data_science.random_forest",
+    reporting_pipeline = pipeline(
+        rep.create_pipeline(), inputs=["model_input_table"], namespace="reporting"
     )
-
-    modelling_pipeline = splitting_pipeline + model_linear_pipeline + model_rf_pipeline
-
-    reporting_pipeline = pipeline(rep.create_pipeline(), inputs=["model_input_table"], namespace='reporting')
 
     return {
         "__default__": (
-            data_ingestion_pipeline
+            ingestion_pipeline
             + feature_pipeline
             + modelling_pipeline
             + reporting_pipeline
         ),
-        "Data ingestion": data_ingestion_pipeline,
+        "Data ingestion": ingestion_pipeline,
         "Modelling stage": modelling_pipeline,
         "Automated feature engineering": feature_pipeline,
         "Reporting stage": reporting_pipeline,
-        "Split stage": splitting_pipeline,
     }

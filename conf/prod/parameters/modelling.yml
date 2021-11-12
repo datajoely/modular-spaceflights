@@ -2,7 +2,7 @@ test_size: 0.3
 random_state: 45
 
 model_options:
-  linear:
+  linear_regression:
     class: LinearRegression
     kwargs:
       fit_intercept: True

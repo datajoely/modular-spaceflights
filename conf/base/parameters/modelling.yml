@@ -14,7 +14,7 @@ features_pattern:
   - ^feat_
 
 model_options:
-  linear:
+  linear_regression:
     class: LinearRegression
     kwargs:
       fit_intercept: True
