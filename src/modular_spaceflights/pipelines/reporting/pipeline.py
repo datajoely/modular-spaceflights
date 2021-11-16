@@ -7,6 +7,7 @@ from kedro.pipeline import Pipeline, node
 
 from modular_spaceflights.pipelines.reporting.nodes import (
     make_cancel_policy_chart,
+    make_price_analysis_image,
     make_price_histogram,
 )
 
@@ -23,6 +24,11 @@ def create_pipeline(**kwargs):
                 func=make_price_histogram,
                 inputs="model_input_table",
                 outputs="price_histogram",
+            ),
+            node(
+                func=make_price_analysis_image,
+                inputs="model_input_table",
+                outputs="cancellation_policy_grid",
             ),
         ]
     )

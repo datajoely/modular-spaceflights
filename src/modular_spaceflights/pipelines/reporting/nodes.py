@@ -3,6 +3,9 @@ This is a boilerplate pipeline 'reporting'
 generated using Kedro 0.17.5
 """
 import pandas as pd
+import PIL
+
+from modular_spaceflights.pipelines.reporting.image_utils import DrawTable
 
 
 def make_price_histogram(model_input_data: pd.DataFrame) -> pd.DataFrame:
@@ -43,3 +46,17 @@ def make_cancel_policy_chart(
 
     high_value_filter = country_policy_df.company_location.isin(high_value_countries)
     return country_policy_df[high_value_filter]
+
+
+def make_price_analysis_image(model_input_table: pd.DataFrame) -> PIL.Image:
+
+    analysis_df = (
+        model_input_table.groupby("cancellation_policy")[
+            ["price", "review_scores_rating"]
+        ]
+        .mean()
+        .reset_index()
+    )
+
+    pil_table = DrawTable(analysis_df)
+    return pil_table.image
