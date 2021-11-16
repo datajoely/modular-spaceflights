@@ -7,7 +7,6 @@ jupyter_client>=5.1, <7.0
 jupyterlab~=3.0
 kedro[pandas.CSVDataSet,pandas.ExcelDataSet, pandas.ParquetDataSet]==0.17.5
 kedro-telemetry~=0.1.0
-kedro-viz~=3.1
 nbstripout~=0.4
 pytest-cov~=2.5
 pytest-mock>=1.7.1, <2.0
@@ -15,3 +14,4 @@ pytest~=6.2
 scikit-learn~=0.24
 wheel>=0.35, <0.37
 openpyxl==3.0.9
+kedro-viz
