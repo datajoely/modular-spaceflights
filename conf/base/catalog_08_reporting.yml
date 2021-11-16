@@ -23,3 +23,6 @@ reporting.cancellation_policy_breakdown:
       labels:
         price: 'fleet_price'
   
+reporting.cancellation_policy_grid:
+  type: modular_spaceflights.extras.datasets.image_dataset.ImageDataSet
+  filepath: ${base_location}/08_reporting/cancellation_policy_grid.png
