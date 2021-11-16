@@ -44,8 +44,8 @@ def new_feature_eng_pipeline(
 
     def _new_feature(feature_type: str) -> Pipeline:
         """This method will create a new instance of the feature pipelines with
-        correctly named parameters and output catalog target. In this example all features
-        use the same primary input table to build automated features.
+        correctly named parameters and output catalog target. In this example all
+        features use the same primary input table to build automated features.
         """
         feature_pipeline = pipeline(
             template_feature_pipeline,
@@ -56,12 +56,13 @@ def new_feature_eng_pipeline(
         return feature_pipeline
 
     # In later version of Kedro you will be able to use sum() when collapsing a
-    # in iterable of pipelines into one object, here we use reduce to add them all together
+    # in iterable of pipelines into one object, here we use reduce to add them
+    # all together
     feature_creation_pipeline = reduce(add, [_new_feature(k) for k in metrics])
 
     # For every feature pipeline created we create a new feature metric table.
-    # This step creates a dictionary that can then be passed to the combine_features_pipeline()
-    # instance as inputs
+    # This step creates a dictionary that can then be passed to the
+    # combine_features_pipeline() instance as inputs
     new_feature_inputs = {
         f"feature_{i+1}": f"feat_{k}_metrics" for i, k in enumerate(metrics)
     }
@@ -79,8 +80,8 @@ def new_feature_eng_pipeline(
         outputs="model_input_table",
     )
 
-    # The final step combines all pipelines create in this method under one namespace and
-    # declare top level pipeline inputs and outputs
+    # The final step combines all pipelines create in this method under one namespace
+    # and declare top level pipeline inputs and outputs
     return pipeline(
         feature_creation_pipeline + join_features_pipeline,
         namespace="feature_engineering",
