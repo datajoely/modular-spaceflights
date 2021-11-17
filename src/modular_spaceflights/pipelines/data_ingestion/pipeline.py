@@ -1,4 +1,4 @@
-from kedro.pipeline import Pipeline, node
+from kedro.pipeline import Pipeline, node, pipeline
 
 from .nodes import (
     aggregate_company_data,
@@ -44,4 +44,24 @@ def create_pipeline(**kwargs):
                 name="combine_step",
             ),
         ]
+    )
+
+
+def new_ingestion_pipeline(raw_pipeline: Pipeline) -> Pipeline:
+    """[summary]
+
+    Args:
+        raw_pipeline (Pipeline): [description]
+
+    Returns:
+        Pipeline: [description]
+    """
+    return pipeline(
+        raw_pipeline,
+        namespace="data_ingestion",  # provide inputs
+        inputs={"reviews", "shuttles", "companies"},  # map inputs outside of namespace
+        outputs={
+            "prm_spine_table",
+            "prm_shuttle_company_reviews",
+        },
     )
