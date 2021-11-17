@@ -59,6 +59,7 @@ def train_model(
     """
 
     model_type = model_options.get("class")
+    model_arguments = model_options.get("kwargs")
 
     acceptable_model_types = ["LinearRegression", "RandomForestRegressor"]
     if model_type == acceptable_model_types[0]:
@@ -71,12 +72,13 @@ def train_model(
             f"as acceptable arguments"
         )
 
-    regressor_instance = regressor_class(**model_options.get("kwargs"))
+    regressor_instance = regressor_class(**model_arguments)
     logger = logging.getLogger(__name__)
     logger.info(f"Fitting model of type {type(regressor_instance)}")
 
     regressor_instance.fit(X_train, y_train)
-    return regressor_instance, model_options
+    flat_model_params = {**{"model_type": model_type}, **model_arguments}
+    return regressor_instance, flat_model_params
 
 
 def evaluate_model(
