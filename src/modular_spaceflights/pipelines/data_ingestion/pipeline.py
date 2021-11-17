@@ -14,7 +14,7 @@ def create_pipeline(**kwargs) -> Pipeline:
     add types and wrangle into primary layer outputs.
 
     Returns:
-        Pipeline: A set of nodes which take data from the raw to 
+        Pipeline: A set of nodes which take data from the raw to
         the intermediate then primary layers.
     """
     return Pipeline(

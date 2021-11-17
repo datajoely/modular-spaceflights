@@ -1,7 +1,8 @@
-from typing import List
-from kedro.pipeline import Pipeline, node, pipeline
 from functools import reduce
 from operator import add
+from typing import List
+
+from kedro.pipeline import Pipeline, node, pipeline
 
 from .nodes import evaluate_model, split_data, train_model
 

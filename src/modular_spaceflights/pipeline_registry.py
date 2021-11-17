@@ -18,11 +18,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
     """
     ingestion_pipeline = di.new_ingestion_pipeline(namespace="data_ingestion")
 
-    feature_pipeline = fe.new_feature_eng_pipeline(
-        template_feature_pipeline=fe.create_feature_pipeline(),
-        combination_pipeline=fe.create_joining_pipeline(),
-        metrics=["scaling", "weighting"],
-    )
+    feature_pipeline = fe.new_feature_eng_pipeline(metrics=["scaling", "weighting"])
 
     modelling_pipeline = mod.new_modeling_pipeline(
         split_pipeline=mod.create_split_pipeline(),
