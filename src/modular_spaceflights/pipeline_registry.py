@@ -16,7 +16,7 @@ def register_pipelines() -> Dict[str, Pipeline]:
         A mapping from a pipeline name to a ``Pipeline`` object.
 
     """
-    ingestion_pipeline = di.new_ingestion_pipeline(di.create_pipeline())
+    ingestion_pipeline = di.new_ingestion_pipeline(namespace="data_ingestion")
 
     feature_pipeline = fe.new_feature_eng_pipeline(
         template_feature_pipeline=fe.create_feature_pipeline(),
