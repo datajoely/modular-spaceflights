@@ -5,9 +5,9 @@ from PIL import Image, ImageDraw, ImageFont
 class DrawTable:
     """This class accepts a Pandas DataFrame and writes out a Pillow image"""
 
-    def __init__(self, _df: pd.DataFrame):
+    def __init__(self, _df: pd.DataFrame, x:int=500, y:int=200):
         self.rows, self.cols = _df.shape
-        img_size = (500, 200)
+        img_size = (x, y)
         self.border = 50
         self.bg_col = (255, 255, 255)
         self.div_w = 1
