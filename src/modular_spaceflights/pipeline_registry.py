@@ -1,7 +1,8 @@
 """Project pipelines."""
 from typing import Dict
 
-from kedro.pipeline import Pipeline, pipeline
+from kedro.pipeline import Pipeline
+from kedro.pipeline.modular_pipeline import pipeline
 
 from modular_spaceflights.pipelines import data_ingestion as di
 from modular_spaceflights.pipelines import feature_engineering as fe
@@ -21,9 +22,11 @@ def register_pipelines() -> Dict[str, Pipeline]:
     feature_pipeline = fe.new_feature_eng_pipeline(metrics=["scaling", "weighting"])
 
     modelling_pipeline = mod.new_modeling_pipeline(
-        split_pipeline=mod.create_split_pipeline(),
-        tain_eval_template=mod.create_train_evaluate_pipeline(),
         model_types=["linear_regression", "random_forest"],
+        X_train="X_train",
+        X_test="X_test",
+        y_train="y_train",
+        y_test="y_test",
     )
 
     reporting_pipeline = pipeline(
