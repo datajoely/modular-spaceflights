@@ -7,7 +7,8 @@ from functools import reduce
 from operator import add
 from typing import List
 
-from kedro.pipeline import Pipeline, node, pipeline
+from kedro.pipeline import Pipeline, node
+from kedro.pipeline.modular_pipeline import pipeline
 
 from modular_spaceflights.pipelines.feature_engineering.nodes import (
     feature_maker,

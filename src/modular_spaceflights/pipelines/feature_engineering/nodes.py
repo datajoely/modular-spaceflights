@@ -25,8 +25,8 @@ def _create_feature(
         data (pd.DataFrame): The data to add a new feature column to
         column_a (str): The left operand to the `np_function`
         column_b (str): The right operand to the `np_function`
-        np_function (Callable): Any top level numpy function such as `np.sum()` 
-            or `np.max()`. This is has no safeguards so is potentially unsafe 
+        np_function (Callable): Any top level numpy function such as `np.sum()`
+            or `np.max()`. This is has no safeguards so is potentially unsafe
             and must be used with caution.
         column_descriptor (str): This is used to describe the `new_column_name`
 
@@ -43,7 +43,7 @@ def _create_feature(
 
 
 def feature_maker(data: pd.DataFrame, feature_set: Dict[str, Any]) -> pd.DataFrame:
-    """This function retrieves configuration from parameters passed in 
+    """This function retrieves configuration from parameters passed in
     and will iteratively create a new column for every column pair provided.
 
     Args:
@@ -55,7 +55,7 @@ def feature_maker(data: pd.DataFrame, feature_set: Dict[str, Any]) -> pd.DataFra
         AttributeError: Is raised if a valid numpy method cannot be found
 
     Returns:
-        pd.DataFrame: A data frame with new feature columns introduced 
+        pd.DataFrame: A data frame with new feature columns introduced
     """
 
     np_method_string = feature_set.get("np_method")
@@ -75,7 +75,7 @@ def feature_maker(data: pd.DataFrame, feature_set: Dict[str, Any]) -> pd.DataFra
             np_function=np_function,
             column_descriptor=col_descriptor,
         )
-    
+
     # Limit to identifiers and new feature columns created
     columns_to_retain = [
         x for x in data.columns if x.startswith("feat_") or x.endswith("_id")
