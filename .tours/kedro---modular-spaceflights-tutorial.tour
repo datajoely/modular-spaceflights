@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "Kedro - Modular Spaceflights - Building the ingestion pipeline",
+  "title": "Building the ingestion pipeline",
   "steps": [
     {
       "file": "conf/base/catalog_01_raw.yml",
