@@ -1,51 +1,10 @@
-# Data Processing pipeline
-## Overview
+# Data Ingestion modular pipeline
 
-This modular pipeline preprocesses the raw data (`preprocess_companies_node` and `preprocess_shuttles_node`) and creates the model input table (`create_model_input_table_node`).
+- This pipeline takes raw `companies`, `shuttles` and `reviews` data and creates typed parquet mirrors on the `intermediate` level.
+- In order to create the `primary` domain level data, we aggregate the `companies` data so we have one row per company. We then merge all 3 sources and create two new `primary` tables:
+  - The `prm_spine_table`  contains just the relevant ID columns at the required grain going forward. All `feature` and `model_input` tables will include these columns and have the same number rows.
+  - The `prm_shuttle_company_reviews` table includes metrics which will be used later or in the pipeline as features ready to be used in the model.
 
-## Pipeline inputs
+## Visualisation
 
-### `companies`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | Raw data on the companies running the space shuttles |
-
-### `shuttles`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | Raw data on technical characteristics of the space shuttles |
-
-### `reviews`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | Raw data with historical customer reviews of their space trips |
-
-
-## Pipeline outputs
-
-### `preprocessed_companies`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | Preprocessed version of the `companies` dataset |
-
-### `preprocessed_shuttles`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | Preprocessed version of the `shuttles` dataset |
-
-### `model_input_table`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | A combined dataset containing data on shuttles, joined with company and reviews information |
+![ingestion](../../../../.tours/images/ingestion.png)  

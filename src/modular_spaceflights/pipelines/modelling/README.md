@@ -1,64 +1,12 @@
-# Data Science pipeline
+# Modelling pipeline
 
 > *Note:* This `README.md` was generated using `Kedro 0.17.5` for illustration purposes. Please modify it according to your pipeline structure and contents.
 
-## Overview
+- This part of the pipeline handles the `spit` / `train` / `test` elements of the ML process.
+- The `split_data` method is parametrised to create a single source of `train` and `test` data.
+- We then use the modular pipeline pattern to instantiate two instances of our training and evaluation pipeline using two different Sklearn regressors (Random Forest, Linear Regression)
+- In order to track experimentation over time, each model type will track 🧪 the hyper-parameters used as well as the R^2 score.
 
-This modular pipeline:
-1. Splits the model input table into train and test subsets (`split_data_node`)
-2. Trains a simple linear regression model (`train_model_node`)
-3. Evaluates the performance of the trained model on the test set (`evaluate_model_node`)
+## Visualisation
 
-## Pipeline inputs
-
-### `model_input_table`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | A combined dataset containing data on shuttles, joined with company and reviews information |
-
-### `parameters`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `dict` |
-| Description | Project parameter dictionary that must contain the following keys: `test_size` (the proportion of the dataset to include in the test split), `random_state` (random seed for the shuffling applied to the data before applying the split), `features` (list of features to use for modelling) |
-
-
-## Pipeline outputs
-
-### `X_train`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | Train set features |
-
-### `y_train`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.Series` |
-| Description | Train set target variable |
-
-### `X_test`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.DataFrame` |
-| Description | Test set features |
-
-### `y_test`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `pandas.Series` |
-| Description | Test set target variable |
-
-### `regressor`
-
-|      |                    |
-| ---- | ------------------ |
-| Type | `sklearn.linear_model.LinearRegression` |
-| Description | Trained linear regression model |
+![ingestion](../../../../.tours/images/modelling.png)

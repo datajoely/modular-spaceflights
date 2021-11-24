@@ -1,21 +1,18 @@
-# Pipeline feature_engineering
+# Feature engineering pipeline
 
-> *Note:* This is a `README.md` boilerplate generated using `Kedro 0.17.5`.
+> *Note:* This `README.md` was generated using `Kedro 0.17.5` for illustration purposes. Please modify it according to your pipeline structure and contents.
 
-## Overview
+This pipeline creates features from two different sources:
 
-<!---
-Please describe your modular pipeline here.
--->
+* Simple approach - There are metric columns already in the `prm_shuttle_company_reviews` table that are ready to go and are included in the `joiner` operation.
+* Complex approach - Two parametrised instances of `Feature Maker` pipeline are created to create:
+  * Scaled metrics are pairs of columns multiplied by each other.
+  * Weighted metrics are paris of columns divided by each other.
 
-## Pipeline inputs
+> Look out for the '🟨 ' in Kedro Viz it means that parameters are applied to this node. You can inspect them on the sidebar by clicking the node.
 
-<!---
-The list of pipeline inputs.
--->
+* The `joiner` node has been written in a way that it will keep inner joining an arbitrary sequence of pandas DataFrame objects into one single table. It will fail if the number of rows changes during this operation. This operation creates out `model_input_table` which will be fundamental to analytical components downstream.
 
-## Pipeline outputs
+## Visualisation
 
-<!---
-The list of pipeline outputs.
--->
+![ingestion](../../../../.tours/images/feature.png)
