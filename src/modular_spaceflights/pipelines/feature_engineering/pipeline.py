@@ -5,7 +5,7 @@ generated using Kedro 0.17.5
 
 from functools import reduce
 from operator import add
-from typing import List
+from typing import Iterable, List
 
 from kedro.pipeline import Pipeline, node
 from kedro.pipeline.modular_pipeline import pipeline
@@ -38,7 +38,7 @@ def _create_feat_template_pipeline(**kwargs) -> Pipeline:
     )
 
 
-def _new_feature(feature_type: str) -> Pipeline:
+def _new_feature_set(feature_type: str) -> Pipeline:
     """This function will create a set of features by creating an
     instance of the feature template pipeline with appropriately named
     outputs driven by parameters of the same name.
@@ -58,7 +58,7 @@ def _new_feature(feature_type: str) -> Pipeline:
     """
 
     feature_pipeline = pipeline(
-        _create_feat_template_pipeline(),
+        pipe=_create_feat_template_pipeline(),
         inputs={"prm_table": "prm_shuttle_company_reviews"},
         parameters={"params:feature_type": f"params:feature_{feature_type}"},
         outputs={"feature_table": f"feat_{feature_type}_metrics"},
@@ -66,7 +66,7 @@ def _new_feature(feature_type: str) -> Pipeline:
     return feature_pipeline
 
 
-def _create_features(metrics: List[str]) -> Pipeline:
+def _new_feature_maker_instances(metrics: List[str]) -> Pipeline:
     """This function accepts a list of metrics and instantiates
     an new feature pipeline for each metric provided.
 
@@ -79,7 +79,7 @@ def _create_features(metrics: List[str]) -> Pipeline:
             for each metric
     """
 
-    new_features_list = [_new_feature(k) for k in metrics]
+    new_features_list = [_new_feature_set(k) for k in metrics]
 
     # We want to add these new pipelines into a single pipeline
     # You can do this manually by doing Pipeline1 + Pipeline 2
@@ -92,7 +92,7 @@ def _create_features(metrics: List[str]) -> Pipeline:
     return consolidate_feature_pipelines
 
 
-def create_joining_pipeline(num_additional_features: int) -> Pipeline:
+def create_joining_pipeline(num_additional_feature_sets: int) -> Pipeline:
     """This function is intended to show how to instantiate a pipeline
     of arbitrary length dynamically.
 
@@ -114,7 +114,7 @@ def create_joining_pipeline(num_additional_features: int) -> Pipeline:
             number of inputs in created as part of the feature engineering stage.
     """
 
-    additional_features = [f"feature_{i+1}" for i in range(num_additional_features)]
+    additional_features = [f"feature_{i+1}" for i in range(num_additional_feature_sets)]
 
     return Pipeline(
         [
@@ -128,7 +128,7 @@ def create_joining_pipeline(num_additional_features: int) -> Pipeline:
 
 
 def new_feature_eng_pipeline(
-    metrics: List[str],
+    metrics: Iterable[str] = ("scaling", "weighting"),
 ) -> Pipeline:
     """This function will create the end to end feature engineering pipeline
     and also create the single `model_input` table as an output.
@@ -147,8 +147,9 @@ def new_feature_eng_pipeline(
     """
 
     # Create dynamic features and consoilidate into single pipeline
-    dynamic_features_pipeline = _create_features(metrics)
+    dynamic_features_pipeline = _new_feature_maker_instances(metrics)
 
+    # Get ready to join everything together
     # Map inputs to keys in `conf/base/parameters/feature_engineering.yml`
     # feature_1 <- metric[0] <- e.g. params:feature_scaling
     placeholder_override = {
@@ -167,7 +168,7 @@ def new_feature_eng_pipeline(
 
     # Create a table that joins all tables created up until this point
     join_features_pipeline = pipeline(
-        create_joining_pipeline(num_additional_features=len(metrics)),
+        create_joining_pipeline(num_additional_feature_sets=len(metrics)),
         inputs=pipeline_inputs_map,
         outputs="model_input_table",
     )
@@ -175,7 +176,7 @@ def new_feature_eng_pipeline(
     # Consolidate the feature creation pipeline and joining steps
     # under one namespace
     return pipeline(
-        dynamic_features_pipeline + join_features_pipeline,
+        pipe=dynamic_features_pipeline + join_features_pipeline,
         namespace="feature_engineering",
         inputs=["prm_shuttle_company_reviews", "prm_spine_table"],
         outputs=["model_input_table"],
