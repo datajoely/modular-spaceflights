@@ -163,7 +163,7 @@ def new_modeling_pipeline(
     consolidated_model_pipelines = pipeline(
         pipe=all_modeling_pipelines,
         namespace="train_evaluation",
-        inputs=lookup['test_train_refs'],
+        inputs=lookup["test_train_refs"],
     )
 
     # Combine split and modeling stages into one pipeline

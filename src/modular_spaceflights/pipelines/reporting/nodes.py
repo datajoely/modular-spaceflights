@@ -9,7 +9,7 @@ from modular_spaceflights.pipelines.reporting.image_utils import DrawTable
 
 
 def make_price_histogram(model_input_data: pd.DataFrame) -> pd.DataFrame:
-    """This function retrieves the two key columns needed to visualise the 
+    """This function retrieves the two key columns needed to visualise the
     price-engine histogram
 
     Args:
@@ -27,11 +27,11 @@ def make_cancel_policy_bar_chart(
 ) -> pd.DataFrame:
 
     """This function performs a group by on the input table, limits the
-    results to the top n countries based on price and returns the 
+    results to the top n countries based on price and returns the
     data needed to visualise a stacked bar chart
 
     Args:
-        model_input_data (pd.DataFrame): The data to plot 
+        model_input_data (pd.DataFrame): The data to plot
         top_counties (int, optional): [description]. Defaults to 20.
 
     Returns:
@@ -56,10 +56,10 @@ def make_cancel_policy_bar_chart(
 
 
 def make_price_analysis_image(model_input_table: pd.DataFrame) -> PIL.Image:
-    """This function accepts a Pandas DataFrame and renders a bitmap 
+    """This function accepts a Pandas DataFrame and renders a bitmap
     plot of the data.
-    
-    This method is intended to show how easy it is to use a custom 
+
+    This method is intended to show how easy it is to use a custom
     dataset in Kedro. You can read more here:
     https://kedro.readthedocs.io/en/stable/07_extend_kedro/03_custom_datasets.html
 

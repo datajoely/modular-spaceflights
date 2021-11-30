@@ -12,11 +12,8 @@ from modular_spaceflights.pipelines.reporting.nodes import (
 )
 
 
-def create_pipeline(**kwargs):
-    """This is a simple pipeline which 
-
-    Returns:
-        [type]: [description]
+def create_pipeline(**kwargs) -> Pipeline:
+    """This is a simple pipeline which generates a series of plots 
     """
     return Pipeline(
         [
