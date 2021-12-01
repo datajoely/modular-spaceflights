@@ -121,7 +121,7 @@ def new_modeling_pipeline(
     Args:
         model_types (List[str]): The instances of Sklearn models
             we want to build, each of these must correspond to
-            patameter keys of the same name
+            parameter keys of the same name
 
     Returns:
         Pipeline: A single pipeline encapsulating the split
@@ -163,7 +163,7 @@ def new_modeling_pipeline(
     consolidated_model_pipelines = pipeline(
         pipe=all_modeling_pipelines,
         namespace="train_evaluation",
-        inputs=lookup['test_train_refs'],
+        inputs=lookup["test_train_refs"],
     )
 
     # Combine split and modeling stages into one pipeline
