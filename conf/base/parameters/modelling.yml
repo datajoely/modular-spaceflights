@@ -1,17 +1,18 @@
-test_size: 0.2
-random_state: 3
-target: "price"
-features_explicit:
-  - engines
-  - passenger_capacity
-  - crew
-  - d_check_complete
-  - moon_clearance_complete
-  - iata_approved
-  - company_rating
-  - review_scores_rating
-features_pattern:
-  - ^feat_
+split_options:
+  test_size: 0.2
+  random_state: 3
+  target: "price"
+  features_explicit:
+    - engines
+    - passenger_capacity
+    - crew
+    - d_check_complete
+    - moon_clearance_complete
+    - iata_approved
+    - company_rating
+    - review_scores_rating
+  features_pattern:
+    - ^feat_
 
 model_options:
   linear_regression:

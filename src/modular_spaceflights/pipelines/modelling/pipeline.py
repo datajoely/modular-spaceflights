@@ -25,7 +25,7 @@ def create_split_pipeline(X_refs: List[str], y_refs: List[str]) -> Pipeline:
         [
             node(
                 func=split_data,
-                inputs=["model_input_table", "parameters"],
+                inputs=["model_input_table", "params:split_options"],
                 outputs=X_refs + y_refs,
             )
         ]

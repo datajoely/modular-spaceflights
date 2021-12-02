@@ -8,7 +8,7 @@ from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 
 
-def split_data(data: pd.DataFrame, parameters: Dict) -> Tuple:
+def split_data(data: pd.DataFrame, split_options: Dict) -> Tuple:
     """Splits data into features and targets training and test sets.
 
     Args:
@@ -17,17 +17,17 @@ def split_data(data: pd.DataFrame, parameters: Dict) -> Tuple:
     Returns:
         Split data.
     """
-    feature_columns_pattern_regex = "|".join(parameters["features_pattern"])
+    feature_columns_pattern_regex = "|".join(split_options["features_pattern"])
 
-    feature_columns_explicit = set(parameters["features_explicit"])
+    feature_columns_explicit = set(split_options["features_explicit"])
     feature_columns_pattern = set(
         data.filter(regex=feature_columns_pattern_regex).columns
     )
 
     columns_in_scope = feature_columns_explicit | feature_columns_pattern
-    target_variable = parameters["target"]
-    test_size = parameters["test_size"]
-    random_state = parameters["random_state"]
+    target_variable = split_options["target"]
+    test_size = split_options["test_size"]
+    random_state = split_options["random_state"]
 
     logger = logging.getLogger(__name__)
     logger.info(
