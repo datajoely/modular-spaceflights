@@ -22,7 +22,7 @@ def new_train_eval_template() -> Pipeline:
         [
             node(
                 func=train_model,
-                inputs=["X_tain", "y_train", "params:dummy_model_options"],
+                inputs=["X_train", "y_train", "params:dummy_model_options"],
                 outputs=["regressor", "experiment_params"],
             ),
             node(
@@ -73,7 +73,7 @@ def new_modeling_pipeline(model_types: List[str]) -> Pipeline:
             node(
                 func=split_data,
                 inputs=["model_input_table", "params:split_options"],
-                outputs=["X_train", "X_test", "y_train", "y_test"],
+                outputs=test_train_refs,
             )
         ]
     )
@@ -81,11 +81,11 @@ def new_modeling_pipeline(model_types: List[str]) -> Pipeline:
     # Instantiate a new modeling pipeline for every model type
     model_pipelines = [
         pipeline(
-            pipe=new_train_eval_template()(),
+            pipe=new_train_eval_template(),
             parameters={
                 "params:dummy_model_options": f"params:model_options.{model_type}"
             },
-            inputs=["X_train", "X_test", "y_train", "y_test"],
+            inputs={k: k for k in test_train_refs},
             outputs={  # both of these are tracked as experiments
                 "experiment_params": f"hyperparams_{model_type}",
                 "r2_score": f"r2_score_{model_type}",

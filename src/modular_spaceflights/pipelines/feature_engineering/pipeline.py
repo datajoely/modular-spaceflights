@@ -18,8 +18,8 @@ from modular_spaceflights.pipelines.feature_engineering.nodes import (
 
 
 def new_feature_pipeline() -> Pipeline:
-    """This function will return a namespaced instance of 
-    a pipeline that creates a set of features defined within the 
+    """This function will return a namespaced instance of
+    a pipeline that creates a set of features defined within the
     `conf/**/*parameters.yml`.
 
     'Static' features are those plucked directly from the primary layer
