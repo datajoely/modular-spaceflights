@@ -8,18 +8,10 @@ from kedro.pipeline.modular_pipeline import pipeline
 from .nodes import evaluate_model, split_data, train_model
 
 
-def create_train_evaluate_pipeline(
-    train_refs: List[str], test_refs: List[str]
-) -> Pipeline:
+def new_train_eval_template() -> Pipeline:
     """This two node pipeline will train a Sklearn model and return
     a regressor object along with `experiment_params` as tracked
     metadata.
-
-    Args:
-        train_refs (List[str]): The names of the `X_tain` and `y_train`
-            tables
-        test_refs (List[str]): The names of the `X_test` and `y_test`
-            tables
 
     Returns:
         Pipeline: This pipeline has been designed in a way that
@@ -30,51 +22,19 @@ def create_train_evaluate_pipeline(
         [
             node(
                 func=train_model,
-                inputs=train_refs + ["params:dummy_model_options"],
+                inputs=["X_tain", "y_train", "params:dummy_model_options"],
                 outputs=["regressor", "experiment_params"],
             ),
             node(
                 func=evaluate_model,
-                inputs=["regressor"] + test_refs,
+                inputs=["regressor", "X_test", "y_test"],
                 outputs="r2_score",
             ),
         ]
     )
 
 
-def new_train_eval_instance(
-    eval_pipeline_template: Pipeline, model_type: str, train_test_refs: List[str]
-) -> Pipeline:
-    """This method instantiates an modular pipeline instance of the training
-    and evaluation pipeline with overrides for the model parameters, tracked
-    outputs and namespaces.
-
-
-    Args:
-        eval_pipeline_template (Pipeline): The template pipeline to instantiate
-        model_type (str): This is used to retrieve the relevant parameter and
-            catalog names. It is also used as the namespace for this pipeline
-            instance.
-        train_test_refs (List[str]): The names of the train and test data tables
-
-    Returns:
-        Pipeline: The full pipeline instantiated for a particular model type.
-    """
-    return pipeline(
-        pipe=eval_pipeline_template,
-        parameters={"params:dummy_model_options": f"params:model_options.{model_type}"},
-        inputs=train_test_refs,
-        outputs={  # both of these are tracked as experiments
-            "experiment_params": f"hyperparams_{model_type}",
-            "r2_score": f"r2_score_{model_type}",
-        },
-        namespace=f"{model_type}",
-    )
-
-
-def new_modeling_pipeline(
-    model_types: List[str], X_train: str, X_test: str, y_train: str, y_test: str
-) -> Pipeline:
+def new_modeling_pipeline(model_types: List[str]) -> Pipeline:
     """This function will create a complete modelling
     pipeline that consolidates a single shared 'split' stage,
     several modular instances of the 'train test evaluate' stage
@@ -105,13 +65,7 @@ def new_modeling_pipeline(
             for each `model_type` passed in.
     """
 
-    lookup = {
-        "test_train_refs": [X_train, X_test, y_train, y_test],
-        "X_refs": [X_train, X_test],
-        "y_refs": [y_train, y_test],
-        "train_refs": [X_train, y_train],
-        "test_refs": [X_test, y_test],
-    }
+    test_train_refs = ["X_train", "X_test", "y_train", "y_test"]
 
     # Split the model_input data
     split_stage_pipeline = Pipeline(
@@ -119,21 +73,26 @@ def new_modeling_pipeline(
             node(
                 func=split_data,
                 inputs=["model_input_table", "params:split_options"],
-                outputs=lookup['test_train_refs'],
+                outputs=["X_train", "X_test", "y_train", "y_test"],
             )
         ]
     )
 
     # Instantiate a new modeling pipeline for every model type
     model_pipelines = [
-        new_train_eval_instance(
-            eval_pipeline_template=create_train_evaluate_pipeline(
-                train_refs=lookup["train_refs"], test_refs=lookup["test_refs"]
-            ),
-            model_type=model,
-            train_test_refs=lookup["test_train_refs"],
+        pipeline(
+            pipe=new_train_eval_template()(),
+            parameters={
+                "params:dummy_model_options": f"params:model_options.{model_type}"
+            },
+            inputs=["X_train", "X_test", "y_train", "y_test"],
+            outputs={  # both of these are tracked as experiments
+                "experiment_params": f"hyperparams_{model_type}",
+                "r2_score": f"r2_score_{model_type}",
+            },
+            namespace=f"{model_type}",
         )
-        for model in model_types
+        for model_type in model_types
     ]
 
     # Combine modeling pipeliens into one pipeline object
@@ -143,7 +102,7 @@ def new_modeling_pipeline(
     consolidated_model_pipelines = pipeline(
         pipe=all_modeling_pipelines,
         namespace="train_evaluation",
-        inputs=lookup["test_train_refs"],
+        inputs=test_train_refs,
     )
 
     # Combine split and modeling stages into one pipeline

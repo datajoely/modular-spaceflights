@@ -19,18 +19,16 @@ def register_pipelines() -> Dict[str, Pipeline]:
     """
     ingestion_pipeline = di.new_ingestion_pipeline(namespace="data_ingestion")
 
-    feature_pipeline = fe.new_feature_eng_pipeline(metrics=["scaling", "weighting"])
+    feature_pipeline = fe.new_feature_pipeline()
 
     modelling_pipeline = mod.new_modeling_pipeline(
-        model_types=["linear_regression", "random_forest"],
-        X_train="X_train",
-        X_test="X_test",
-        y_train="y_train",
-        y_test="y_test",
+        model_types=["linear_regression", "random_forest"]
     )
 
     reporting_pipeline = pipeline(
-        rep.create_pipeline(), inputs=["model_input_table"], namespace="reporting"
+        rep.create_pipeline(),
+        inputs=["prm_shuttle_company_reviews"],
+        namespace="reporting",
     )
 
     return {
@@ -42,6 +40,6 @@ def register_pipelines() -> Dict[str, Pipeline]:
         ),
         "Data ingestion": ingestion_pipeline,
         "Modelling stage": modelling_pipeline,
-        "Automated feature engineering": feature_pipeline,
+        "Feature engineering": feature_pipeline,
         "Reporting stage": reporting_pipeline,
     }

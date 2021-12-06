@@ -6,17 +6,28 @@
 
 
 
-feature_scaling:
-  pairs:
-    - ['number_of_reviews', 'total_fleet_count']
-    - ['passenger_capacity', 'total_fleet_count']
-    - ['engines', 'total_fleet_count']
-  np_method: 'divide'
-  col_descriptor: 'over'
-
-feature_weighting:
-  pairs:
-    - ['reviews_per_month', 'company_rating']
-    - ['number_of_reviews', 'company_rating']
-  np_method: 'multiply'
-  col_descriptor: 'by'
+feature:
+  static: 
+    - engines
+    - passenger_capacity
+    - crew
+    - engine_type
+    - d_check_complete
+    - moon_clearance_complete
+    - iata_approved
+    - company_rating
+    - review_scores_rating
+    - price
+  derived:
+    - column_a: number_of_reviews
+      column_b: total_fleet_count
+      numpy_method: divide
+      conjunction: over
+    - column_a: number_of_reviews
+      column_b: total_fleet_count
+      numpy_method: divide
+      conjunction: over
+    - column_a: reviews_per_month
+      column_b: company_rating
+      numpy_method: multiply
+      conjunction: by
