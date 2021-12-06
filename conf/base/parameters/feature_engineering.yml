@@ -5,7 +5,6 @@
 # Link: https://kedro.readthedocs.io/en/0.17.5/04_kedro_project_setup/02_configuration.html#parameters
 
 
-
 feature:
   static: 
     - engines
@@ -22,7 +21,7 @@ feature:
     - column_a: number_of_reviews
       column_b: total_fleet_count
       numpy_method: divide
-      conjunction: over
+      conjunction: over # {column_a}_{over}_{column_b}
     - column_a: number_of_reviews
       column_b: total_fleet_count
       numpy_method: divide

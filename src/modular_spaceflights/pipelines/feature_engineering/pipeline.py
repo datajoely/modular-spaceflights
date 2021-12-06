@@ -3,16 +3,13 @@ This is a boilerplate pipeline 'feature_engineering'
 generated using Kedro 0.17.5
 """
 
-from functools import reduce
-from operator import add
-from typing import Iterable, List
 
 from kedro.pipeline import Pipeline, node
 from kedro.pipeline.modular_pipeline import pipeline
 
 from modular_spaceflights.pipelines.feature_engineering.nodes import (
-    create_static_features,
     create_derived_features,
+    create_static_features,
     joiner,
 )
 

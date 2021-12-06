@@ -4,7 +4,7 @@ generated using Kedro 0.17.5
 """
 
 from functools import reduce
-from typing import Any, Callable, Dict, List
+from typing import Dict, List
 
 import numpy
 import pandas as pd
@@ -14,6 +14,23 @@ def _get_id_columns(data: pd.DataFrame) -> List[str]:
     return [x for x in data.columns if x.endswith("_id")]
 
 
+def create_static_features(data: pd.DataFrame, column_names: List[str]) -> pd.DataFrame:
+    """This function accepts a pandas DataFrame as well as a list of
+    columns to keep in scope. A DataFrame limited to any ID columns as well
+    as the provided column names will be returned
+
+    Args:
+        data (pd.DataFrame): The DataFrame to process
+        column_names (List[str]): The column names to keep in scope
+
+    Returns:
+        (pd.DataFrame): The limited DataFrame to return
+    """
+    id_columns = _get_id_columns(data)
+    columns_to_select = id_columns + column_names
+    return data[columns_to_select]
+
+
 def _create_metric_column(
     data: pd.DataFrame,
     column_a: str,
@@ -21,17 +38,20 @@ def _create_metric_column(
     numpy_method: str,
     conjunction: str,
 ) -> pd.DataFrame:
-    """[summary]
+    """This method will retrieve a numpy function, combine two columns and make
+    a new column. it then retruns a new DataFrame which is the available ID
+    columns plus the new column.
 
     Args:
-        data (pd.DataFrame): [description]
-        column_a (str): [description]
-        columb_b (str): [description]
-        numpy_method (str): [description]
-        conjunction (str): [description]
+        data (pd.DataFrame): The DataFrame to work with
+        column_a (str): The left operand to the numpy function
+        columb_b (str): The right operand to the numpy function
+        numpy_method (str): The numpy function to use such as `numpy.divide`
+        conjunction (str): This is used to name the new column
+            i.e. {a}_{conjunction}_{b}
 
     Returns:
-        pd.DataFrame: [description]
+        pd.DataFrame: A new feature table
     """
     column_operation = getattr(numpy, numpy_method)
     new_column = column_operation(data[column_a], data[column_b])
@@ -39,21 +59,6 @@ def _create_metric_column(
     working_df = data[id_columns]
     working_df[f"{column_a}_{conjunction}_{column_b}"] = new_column
     return working_df
-
-
-def create_static_features(data: pd.DataFrame, column_names: List[str]):
-    """[summary]
-
-    Args:
-        data (pd.DataFrame): [description]
-        column_names (List[str]): [description]
-
-    Returns:
-        [type]: [description]
-    """
-    id_columns = _get_id_columns(data)
-    columns_to_select = id_columns + column_names
-    return data[columns_to_select]
 
 
 def create_derived_features(
