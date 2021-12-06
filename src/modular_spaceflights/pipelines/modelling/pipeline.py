@@ -8,30 +8,6 @@ from kedro.pipeline.modular_pipeline import pipeline
 from .nodes import evaluate_model, split_data, train_model
 
 
-def create_split_pipeline(X_refs: List[str], y_refs: List[str]) -> Pipeline:
-    """This is a simple one node pipeline that accepts a DataFrame
-    along with some logic on how to cut up that pipeline which is then
-    passed to the underlying sklearn `train_test_split()` method.
-
-    Args:
-        X_refs (List[str]): The names of the `X_train` and `X_test` tables
-        y_refs (List[str]): The names of the `y_train` and `y_test` tables
-
-    Returns:
-        Pipeline: This pipeline returns four outputs corresponding to
-            train and test tables needed to evaluate the model performance
-    """
-    return Pipeline(
-        [
-            node(
-                func=split_data,
-                inputs=["model_input_table", "params:split_options"],
-                outputs=X_refs + y_refs,
-            )
-        ]
-    )
-
-
 def create_train_evaluate_pipeline(
     train_refs: List[str], test_refs: List[str]
 ) -> Pipeline:
@@ -137,11 +113,15 @@ def new_modeling_pipeline(
         "test_refs": [X_test, y_test],
     }
 
-    # Split the model input data
-    split_stage_pipeline = pipeline(
-        pipe=create_split_pipeline(X_refs=lookup["X_refs"], y_refs=lookup["y_refs"]),
-        inputs="model_input_table",
-        outputs=lookup["test_train_refs"],
+    # Split the model_input data
+    split_stage_pipeline = Pipeline(
+        [
+            node(
+                func=split_data,
+                inputs=["model_input_table", "params:split_options"],
+                outputs=lookup['test_train_refs'],
+            )
+        ]
     )
 
     # Instantiate a new modeling pipeline for every model type
