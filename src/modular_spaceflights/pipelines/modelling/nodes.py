@@ -17,27 +17,20 @@ def split_data(data: pd.DataFrame, split_options: Dict) -> Tuple:
     Returns:
         Split data.
     """
-    feature_columns_pattern_regex = "|".join(split_options["features_pattern"])
-
-    feature_columns_explicit = set(split_options["features_explicit"])
-    feature_columns_pattern = set(
-        data.filter(regex=feature_columns_pattern_regex).columns
-    )
-
-    columns_in_scope = feature_columns_explicit | feature_columns_pattern
     target_variable = split_options["target"]
+    independent_variables = set(target_variable) - set(data.columns)
     test_size = split_options["test_size"]
     random_state = split_options["random_state"]
 
     logger = logging.getLogger(__name__)
     logger.info(
         f"Splitting data for the following independent variables "
-        f"{columns_in_scope} against the target of '{target_variable}' "
+        f"{independent_variables} against the target of '{target_variable}' "
         f"with a test sized of {test_size} and a random state of "
         f"'{random_state}'"
     )
 
-    X = data[columns_in_scope]
+    X = data[independent_variables]
     y = data[target_variable]
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=random_state
@@ -61,6 +54,7 @@ def train_model(
     model_type = model_options.get("class")
     model_arguments = model_options.get("kwargs")
 
+    # This could be even more generic, but in this case we are able to be specific
     acceptable_model_types = ["LinearRegression", "RandomForestRegressor"]
     if model_type == acceptable_model_types[0]:
         regressor_class = LinearRegression
