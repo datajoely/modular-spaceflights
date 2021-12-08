@@ -6,11 +6,10 @@
 
 
 feature:
-  static: 
+  static:
     - engines
     - passenger_capacity
     - crew
-    - engine_type
     - d_check_complete
     - moon_clearance_complete
     - iata_approved

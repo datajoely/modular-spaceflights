@@ -1,9 +1,9 @@
+import importlib
 import logging
-from typing import Any, Dict, Tuple, Union
+from typing import Any, Dict, Tuple
 
 import pandas as pd
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.linear_model import LinearRegression
+from sklearn.base import BaseEstimator
 from sklearn.metrics import r2_score
 from sklearn.model_selection import train_test_split
 
@@ -18,7 +18,7 @@ def split_data(data: pd.DataFrame, split_options: Dict) -> Tuple:
         Split data.
     """
     target_variable = split_options["target"]
-    independent_variables = set(target_variable) - set(data.columns)
+    independent_variables = [x for x in data.columns if x != target_variable]
     test_size = split_options["test_size"]
     random_state = split_options["random_state"]
 
@@ -35,12 +35,13 @@ def split_data(data: pd.DataFrame, split_options: Dict) -> Tuple:
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=test_size, random_state=random_state
     )
+
     return X_train, X_test, y_train, y_test
 
 
 def train_model(
     X_train: pd.DataFrame, y_train: pd.Series, model_options: Dict[str, Any]
-) -> Tuple[Union[LinearRegression, RandomForestRegressor], Dict[str, Any]]:
+) -> Tuple[BaseEstimator, Dict[str, Any]]:
     """Trains the linear regression model.
 
     Args:
@@ -51,32 +52,26 @@ def train_model(
         Trained model.
     """
 
+    # Parse parameters
+    model_module = model_options.get("module")
     model_type = model_options.get("class")
     model_arguments = model_options.get("kwargs")
 
-    # This could be even more generic, but in this case we are able to be specific
-    acceptable_model_types = ["LinearRegression", "RandomForestRegressor"]
-    if model_type == acceptable_model_types[0]:
-        regressor_class = LinearRegression
-    elif model_type == acceptable_model_types[1]:
-        regressor_class = RandomForestRegressor
-    else:
-        raise ValueError(
-            f"Please provide one of {acceptable_model_types} "
-            f"as acceptable arguments"
-        )
-
+    # Import and instantiate Sklearn regressor object
+    regressor_class = getattr(importlib.import_module(model_module), model_type)
     regressor_instance = regressor_class(**model_arguments)
+
     logger = logging.getLogger(__name__)
     logger.info(f"Fitting model of type {type(regressor_instance)}")
 
+    # Fit model
     regressor_instance.fit(X_train, y_train)
     flat_model_params = {**{"model_type": model_type}, **model_arguments}
     return regressor_instance, flat_model_params
 
 
 def evaluate_model(
-    regressor: Union[LinearRegression, RandomForestRegressor],
+    regressor: BaseEstimator,
     X_test: pd.DataFrame,
     y_test: pd.Series,
 ) -> Dict[str, float]:

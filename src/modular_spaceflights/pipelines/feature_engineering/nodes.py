@@ -57,7 +57,7 @@ def _create_metric_column(
     new_column = column_operation(data[column_a], data[column_b])
     id_columns = _get_id_columns(data=data)
     working_df = data[id_columns]
-    working_df[f"{column_a}_{conjunction}_{column_b}"] = new_column
+    working_df.assign(**{f"{column_a}_{conjunction}_{column_b}": new_column})
     return working_df
 
 
