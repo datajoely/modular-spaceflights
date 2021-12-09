@@ -97,7 +97,7 @@ def new_modeling_pipeline(
     Args:
         model_types (List[str]): The instances of Sklearn models
             we want to build, each of these must correspond to
-            patameter keys of the same name
+            parameter keys of the same name
 
     Returns:
         Pipeline: A single pipeline encapsulating the split
