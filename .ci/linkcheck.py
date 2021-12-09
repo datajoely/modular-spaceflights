@@ -5,7 +5,7 @@ from urllib.request import urlopen
 checks = {}
 for link in sys.argv[1:]:
     try:
-        status = urlopen(link).status
+        status = urlopen(link, timeout=5).status
         checks[link] = status
     except:  # noqa: E722
         checks[link] = status
