@@ -81,7 +81,6 @@
     {
       "file": "src/modular_spaceflights/pipelines/data_ingestion/pipeline.py",
       "description": "### Apply this function in a `node`, within a `Pipeline` object\n\nLet's describe how this works argument by argument:\n\n1. `func` - Refers to the function we just saw in `nodes.py` that types the appropriate columns.\n2. `inputs` - Refers to the catalog entry `reviews` in the raw catalog (`conf/base/catalog_01_raw.yml`)\n3. `outputs` - Refers to a new catalog entry we haven't seen yet... but will do soon!",
-      "line": 17,
       "selection": {
         "start": {
           "line": 16,
@@ -91,7 +90,8 @@
           "line": 20,
           "character": 14
         }
-      }
+      },
+      "line": 24
     },
     {
       "directory": "conf/base",
@@ -140,7 +140,7 @@
     {
       "file": "src/modular_spaceflights/pipelines/data_ingestion/pipeline.py",
       "description": "## Creating the primary layer\n\n- Whereas the `intermediate` layer mirrors the data model of the original source, the `primary` layer is designed to represent to solve problem domain we are trying to work with.\n- The raw company data is non-unique, so we go through an aggregation stage so we have one row per company.",
-      "line": 49,
+      "line": 41,
       "selection": {
         "start": {
           "line": 31,
