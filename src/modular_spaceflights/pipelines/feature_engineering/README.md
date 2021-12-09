@@ -4,10 +4,8 @@
 
 This pipeline creates features from two different sources:
 
-* Simple approach - There are metric columns already in the `prm_shuttle_company_reviews` table that are ready to go and are included in the `joiner` operation.
-* Complex approach - Two parametrised instances of `Feature Maker` pipeline are created to create:
-  * Scaled metrics are pairs of columns multiplied by each other.
-  * Weighted metrics are paris of columns divided by each other.
+* Static features - Features that already exist at the primary layer and just need to be plucked and managed in their own table.
+* Derived feature -  Where parametrised operations create new features by combining two columns.
 
 > Look out for the '🟨 ' in Kedro Viz it means that parameters are applied to this node. You can inspect them on the sidebar by clicking the node.
 

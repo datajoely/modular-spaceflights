@@ -2,20 +2,10 @@ split_options:
   test_size: 0.2
   random_state: 3
   target: "price"
-  features_explicit:
-    - engines
-    - passenger_capacity
-    - crew
-    - d_check_complete
-    - moon_clearance_complete
-    - iata_approved
-    - company_rating
-    - review_scores_rating
-  features_pattern:
-    - ^feat_
 
 model_options:
   linear_regression:
+    module: sklearn.linear_model
     class: LinearRegression
     kwargs:
       fit_intercept: True
@@ -23,6 +13,7 @@ model_options:
       copy_X: True
       positive: False
   random_forest:
+    module: sklearn.ensemble
     class: RandomForestRegressor
     kwargs:
       n_estimators: 100

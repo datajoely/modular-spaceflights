@@ -1,0 +1,51 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "05 Plotly plots in Kedro Viz 📈",
+  "steps": [
+    {
+      "file": "conf/base/catalog_08_reporting.yml",
+      "description": "### Declaring a `plotly.PlotlyDataSet` \n\n- The `PlotlyDataSet` accepts a Pandas DataFrame and passes the `plotly_args` to the Plotly Express library\n- In this situation we are creating a histogram\n- In Kedro 0.17.6+ you can use `plotly.JsonDataSet` where you can simply return the configured plotly object from the node instead of a DataFrame\n",
+      "line": 2,
+      "selection": {
+        "start": {
+          "line": 26,
+          "character": 1
+        },
+        "end": {
+          "line": 27,
+          "character": 1
+        }
+      }
+    },
+    {
+      "file": "src/modular_spaceflights/pipelines/reporting/nodes.py",
+      "description": "### Preparing the histogram\n\n- In order to render this plot we provide a DataFrame that is easy to work with\n- This is a simple example, the `make_cancel_policy_bar_chart()` method below demonstrates a more realistic example where some transformation is required before rendering the plot",
+      "line": 11,
+      "selection": {
+        "start": {
+          "line": 25,
+          "character": 5
+        },
+        "end": {
+          "line": 25,
+          "character": 33
+        }
+      }
+    },
+    {
+      "file": "src/modular_spaceflights/pipelines/reporting/pipeline.py",
+      "description": "### The outputs are clickable within Kedro Viz\n\nClick the 🏞 icon to reveal the plot in the sidebar:\n\n![histogram](.tours/images/plotly-dataset.png)",
+      "line": 27,
+      "selection": {
+        "start": {
+          "line": 27,
+          "character": 26
+        },
+        "end": {
+          "line": 27,
+          "character": 41
+        }
+      }
+    }
+  ]
+}

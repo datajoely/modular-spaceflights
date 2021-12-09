@@ -4,88 +4,81 @@ generated using Kedro 0.17.5
 """
 
 from functools import reduce
-from typing import Any, Callable, Dict
+from typing import Dict, List
 
-import numpy as np
+import numpy
 import pandas as pd
 
 
-def _create_feature(
+def _get_id_columns(data: pd.DataFrame) -> List[str]:
+    return [x for x in data.columns if x.endswith("_id")]
+
+
+def create_static_features(data: pd.DataFrame, column_names: List[str]) -> pd.DataFrame:
+    """This function accepts a pandas DataFrame as well as a list of
+    columns to keep in scope. A DataFrame limited to any ID columns as well
+    as the provided column names will be returned
+
+    Args:
+        data (pd.DataFrame): The DataFrame to process
+        column_names (List[str]): The column names to keep in scope
+
+    Returns:
+        (pd.DataFrame): The limited DataFrame to return
+    """
+    id_columns = _get_id_columns(data)
+    columns_to_select = id_columns + column_names
+    return data[columns_to_select]
+
+
+def _create_metric_column(
     data: pd.DataFrame,
     column_a: str,
     column_b: str,
-    np_function: Callable,
-    column_descriptor: str,
+    numpy_method: str,
+    conjunction: str,
 ) -> pd.DataFrame:
-    """This method accepts a DataFrame, two columns, a numpy function name
-    and then a description of what this function does in order to create a new
-    column with this applied.
+    """This method will retrieve a numpy function, combine two columns and make
+    a new column. it then retruns a new DataFrame which is the available ID
+    columns plus the new column.
 
     Args:
-        data (pd.DataFrame): The data to add a new feature column to
-        column_a (str): The left operand to the `np_function`
-        column_b (str): The right operand to the `np_function`
-        np_function (Callable): Any top level numpy function such as `np.sum()`
-            or `np.max()`. This is has no safeguards so is potentially unsafe
-            and must be used with caution.
-        column_descriptor (str): This is used to describe the `new_column_name`
+        data (pd.DataFrame): The DataFrame to work with
+        column_a (str): The left operand to the numpy function
+        columb_b (str): The right operand to the numpy function
+        numpy_method (str): The numpy function to use such as `numpy.divide`
+        conjunction (str): This is used to name the new column
+            i.e. {a}_{conjunction}_{b}
 
     Returns:
-        pd.DataFrame: A new dataframe is returned with an additional column added
+        pd.DataFrame: A new feature table
     """
+    column_operation = getattr(numpy, numpy_method)
+    new_column = column_operation(data[column_a], data[column_b])
+    id_columns = _get_id_columns(data=data)
+    working_df = data[id_columns]
+    working_df.assign(**{f"{column_a}_{conjunction}_{column_b}": new_column})
+    return working_df
 
-    new_column_name = f"feat_{column_a}_{column_descriptor}_{column_b}"
-    working_data = data.copy()
-    working_data[new_column_name] = np_function(
-        working_data[column_a], working_data[column_b]
-    )
-    return working_data
 
-
-def feature_maker(data: pd.DataFrame, feature_set: Dict[str, Any]) -> pd.DataFrame:
-    """This function retrieves configuration from parameters passed in
-    and will iteratively create a new column for every column pair provided.
+def create_derived_features(
+    spine_df: pd.DataFrame, data: pd.DataFrame, derived_params: Dict[str, str]
+) -> pd.DataFrame:
+    """[summary]
 
     Args:
-        data (pd.DataFrame): The data to create new feature columns for
-        feature_set (Dict[str, Any]): Configuration containing the target
-            columns and operations to apply.
-
-    Raises:
-        AttributeError: Is raised if a valid numpy method cannot be found
-
-    Returns:
-        pd.DataFrame: A data frame with new feature columns introduced
+        spine_df (pd.DataFrame): [description]
+        data (pd.DataFrame): [description]
+        derived_params (Dict[str, str]): [description]
     """
-
-    np_method_string = feature_set.get("np_method")
-
-    if not hasattr(np, np_method_string):
-        raise AttributeError(f"Unable find method np.{np_method_string}")
-
-    np_function = getattr(np, np_method_string)
-    col_descriptor = feature_set.get("col_descriptor")
-
-    # This could rewritten as reduce, but a for loop is easier to read
-    for column_a, column_b in feature_set.get("pairs"):
-        data = _create_feature(
-            data=data,
-            column_a=column_a,
-            column_b=column_b,
-            np_function=np_function,
-            column_descriptor=col_descriptor,
-        )
-
-    # Limit to identifiers and new feature columns created
-    columns_to_retain = [
-        x for x in data.columns if x.startswith("feat_") or x.endswith("_id")
-    ]
-    return data[columns_to_retain]
+    new_columns = [_create_metric_column(data, **kwargs) for kwargs in derived_params]
+    combined_df = joiner(spine_df, *new_columns)
+    return combined_df
 
 
 def joiner(spine_df: pd.DataFrame, *dfs: pd.DataFrame) -> pd.DataFrame:
     """This function takes an arbitrary number of DataFrames and will
-    keep inner-joining them to themselves along any columns suffixed
+    keep left-joining them to themselves along any columns suffixed
     with "id". There is an assumption that the tables passed in share
     the same identifiers and grain.
 
@@ -96,12 +89,12 @@ def joiner(spine_df: pd.DataFrame, *dfs: pd.DataFrame) -> pd.DataFrame:
 
     Returns:
         pd.DataFrame: A single data-frame where all inputs to this function
-            have been inner joined together.
+            have been left joined together.
     """
-    id_columns = [x for x in spine_df.columns if x.endswith("_id")]
+    id_columns = _get_id_columns(data=spine_df)
 
     merged_dfs = reduce(
-        lambda df, df2: df.merge(df2, on=id_columns, how="inner"), dfs, spine_df
+        lambda df, df2: df.merge(df2, on=id_columns, how="left"), dfs, spine_df
     )
     # Confirm that the number of rows is unchanged after the operation has completed
     assert spine_df.shape[0] == merged_dfs.shape[0]

@@ -2,7 +2,7 @@
 
 > *Note:* This `README.md` was generated using `Kedro 0.17.5` for illustration purposes. Please modify it according to your pipeline structure and contents.
 
-The reporting pipeline provides 3 simple descriptive cuts from the `model_input_table`:
+The reporting pipeline provides 3 simple descriptive cuts from the `prm_shuttle_company_reviews` table:
 
 |Plot name|Dataset type|Description|Image|
 |-|-|-|-|
