@@ -9,7 +9,7 @@
     },
     {
       "file": "src/modular_spaceflights/extras/datasets/image_dataset.py",
-      "description": "### Inherting from `AbstractDataSet`\n\n- The abstract interface gives developers the ability to create their own connectors from scratch\n- The `AbstractVersionedDataSet` also exists and is the preferred way of implementing file based connectors, however we have used the non-versioned class for absolute simplicity here\n- Take a moment to read through the code, note how we simply require you to define `load()` and `save()` and `describe()` methods to get off and running.\n- In some cases you may not want to create a DataSet from scratch, but inherit and extend and existing one. This is a valid pattern and we have seen users do things like add Kerberos authentication to out of box data-sets.",
+      "description": "### Inheriting from `AbstractDataSet`\n\n- The abstract interface gives developers the ability to create their own connectors from scratch\n- The `AbstractVersionedDataSet` also exists and is the preferred way of implementing file based connectors, however we have used the non-versioned class for absolute simplicity here\n- Take a moment to read through the code, note how we simply require you to define `load()` and `save()` and `describe()` methods to get off and running.\n- In some cases you may not want to create a DataSet from scratch, but inherit and extend and existing one. This is a valid pattern and we have seen users do things like add Kerberos authentication to out of box data-sets.",
       "line": 11,
       "selection": {
         "start": {
