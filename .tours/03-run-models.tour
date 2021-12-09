@@ -40,7 +40,7 @@
     {
       "file": "src/modular_spaceflights/pipelines/modelling/nodes.py",
       "description": "## Generate our train and test data\nUsing the paramters we are able to:\n- Split our data into train and test data at a given ratio\n- Retrieve our target and independent variables\n- Use a pre-determined seed\n- Leverage the standard Sklearn toolkit",
-      "line": 38,
+      "line": 39,
       "selection": {
         "start": {
           "line": 38,
