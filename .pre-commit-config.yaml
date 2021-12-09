@@ -2,7 +2,7 @@
 # See https://pre-commit.com/hooks.html for more hooks
 
 default_stages: [commit, manual]
-
+fail_fast: true
 repos:
     - repo: https://github.com/pre-commit/pre-commit-hooks
       rev: v2.2.3
@@ -41,4 +41,10 @@ repos:
             language: python_venv
             types: [file, python]
             entry: kedro lint
+            stages: [commit]
+          - id: link check
+            name: "Link check"
+            language: python_venv
+            types: [file, python]
+            entry: make link-check
             stages: [commit]

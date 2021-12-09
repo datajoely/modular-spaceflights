@@ -19,3 +19,11 @@ install-pre-commit:
 uninstall-pre-commit:
 	pre-commit uninstall
 	pre-commit uninstall --hook-type pre-push
+
+
+# link-check
+link-check:
+	find . -type f  \( -name "*.md"  -or -name "*.py" -or -name "*.tour" \)  -print | \
+	xargs  grep -Eo -h "(http|https)://[a-zA-Z0-9./?=_%:-]*" | \
+	sort --unique | \
+	xargs python .ci/linkcheck.py""
