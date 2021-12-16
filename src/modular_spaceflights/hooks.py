@@ -72,7 +72,7 @@ class TimingHooks:
     @hook_impl
     def after_dataset_loaded(self, dataset_name: str, data: Any) -> None:
         """Stop timing once in memory and report duration"""
-        self._start_timing()
+        self._stop_timing()
         message = self._humanise_duration(self.current_duration)
         self._logger.info("Dataset '%s' took %s to load ⏳", dataset_name, message)
 
