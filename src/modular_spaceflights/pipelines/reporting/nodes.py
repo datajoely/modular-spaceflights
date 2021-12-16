@@ -5,7 +5,7 @@ generated using Kedro 0.17.5
 import pandas as pd
 import PIL
 
-from modular_spaceflights.pipelines.reporting.image_utils import DrawTable
+from .image_utils import DrawTable
 
 
 def make_price_histogram(model_input_data: pd.DataFrame) -> pd.DataFrame:
