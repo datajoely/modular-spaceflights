@@ -4,22 +4,10 @@ generated using Kedro 0.17.6
 """
 import pandas as pd
 import PIL
+import plotly.express as px
+from plotly.basedatatypes import BaseFigure
 
 from .image_utils import DrawTable
-
-
-def make_price_histogram(model_input_data: pd.DataFrame) -> pd.DataFrame:
-    """This function retrieves the two key columns needed to visualise the
-    price-engine histogram
-
-    Args:
-        model_input_data (pd.DataFrame): The data to plot
-
-    Returns:
-        pd.DataFrame: The DataFrame limited to only key columns
-    """
-    price_data_df = model_input_data[["price", "engine_type"]]
-    return price_data_df
 
 
 def make_cancel_policy_bar_chart(
@@ -28,7 +16,8 @@ def make_cancel_policy_bar_chart(
 
     """This function performs a group by on the input table, limits the
     results to the top n countries based on price and returns the
-    data needed to visualise a stacked bar chart
+    data needed to visualise a stacked bar chart. The DataFrame is
+    rendered as a Plot using the YAML API exposed in the Kedro Catalog.
 
     Args:
         model_input_data (pd.DataFrame): The data to plot
@@ -53,6 +42,25 @@ def make_cancel_policy_bar_chart(
 
     high_value_filter = country_policy_df.company_location.isin(high_value_countries)
     return country_policy_df[high_value_filter]
+
+
+def make_price_histogram(model_input_data: pd.DataFrame) -> BaseFigure:
+    """This function retrieves the two key columns needed to visualise the
+    price-engine histogram. We then prepare the Plotly figure using the
+    Plotly Python API
+
+    Args:
+        model_input_data (pd.DataFrame): The data to plot
+
+    Returns:
+        BaseFigure: Plotly object which is serialised as JSON for rendering
+    """
+    price_data_df = model_input_data[["price", "engine_type"]]
+
+    plotly_object = px.histogram(
+        data_frame=price_data_df, x="price", log_x=True, color="engine_type"
+    )
+    return plotly_object
 
 
 def make_price_analysis_image(model_input_table: pd.DataFrame) -> PIL.Image:

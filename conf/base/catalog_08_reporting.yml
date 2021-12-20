@@ -1,16 +1,5 @@
-reporting.price_histogram:
-  type: plotly.PlotlyDataSet
-  filepath: ${base_location}/08_reporting/price_histogram.json
-  layer: reporting
-  plotly_args:
-    type: histogram
-    fig:
-      x: price
-      log_x: True
-      color: engine_type
-
 reporting.cancellation_policy_breakdown:
-  type: plotly.PlotlyDataSet
+  type: plotly.PlotlyDataSet # Constructed via plotly_args below
   filepath: ${base_location}/08_reporting/cancellation_breakdown.json
   layer: reporting
   plotly_args:
@@ -22,7 +11,12 @@ reporting.cancellation_policy_breakdown:
       log_y: True
       labels:
         price: 'fleet_price'
-  
+
+reporting.price_histogram:
+  type: plotly.JSONDataSet # Constructed via Python API
+  filepath: ${base_location}/08_reporting/price_histogram.json
+  layer: reporting
+
 reporting.cancellation_policy_grid:
   type: modular_spaceflights.extras.datasets.image_dataset.ImageDataSet
   filepath: ${base_location}/08_reporting/cancellation_policy_grid.png

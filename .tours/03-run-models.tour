@@ -55,7 +55,7 @@
     {
       "file": "src/modular_spaceflights/pipelines/modelling/pipeline.py",
       "description": "## Instantiate two independent modelling pipelines\n\n- Here we use a loop to create two instaces of the `new_train_eval_template()`\n- For each `model_type` we provide namespaced paramters and tracking datasets. \n- The `test_train_refs` are shared and live outside of these namespaces.",
-      "line": 95,
+      "line": 97,
       "selection": {
         "start": {
           "line": 95,
@@ -89,8 +89,7 @@
     },
     {
       "file": "src/modular_spaceflights/pipelines/modelling/pipeline.py",
-      "description": "### Combine into single modeling pipeline\n\n- Once combined, the modular instances nest into their namespaces\n- The split stage is shared and lives outside of a namespace\n- The `train_evaluation` namespace encapsulates the two modelling approaches which live within\n\nModular pipelines allow you to organise your reuse and remix your work within the same project or across codebases.\n\n![test](.tours/images/modelling.gif)",
-      "line": 110,
+      "description": "### Combine into single modeling pipeline\n\n- Once combined, the modular instances nest into their namespaces\n- The split stage is shared and lives outside of a namespace\n- The `train_evaluation` namespace encapsulates the two modelling approaches which live within\n\nModular pipelines allow you to organise your reuse and remix your work within the same project or across codebases.\n\n![modelling](.tours/images/modelling.gif)",
       "selection": {
         "start": {
           "line": 110,

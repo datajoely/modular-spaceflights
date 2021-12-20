@@ -4,7 +4,7 @@
   "steps": [
     {
       "file": "conf/base/catalog_08_reporting.yml",
-      "description": "### Declaring a `plotly.PlotlyDataSet` \n\n- The `PlotlyDataSet` accepts a Pandas DataFrame and passes the `plotly_args` to the Plotly Express library\n- In this situation we are creating a histogram\n- In Kedro 0.17.6+ you can use `plotly.JsonDataSet` where you can simply return the configured plotly object from the node instead of a DataFrame\n",
+      "description": "### Declaring a `plotly.PlotlyDataSet` \n\n- The `PlotlyDataSet` accepts a Pandas DataFrame and passes the `plotly_args` to the Plotly Express library\n- In this situation we are creating a bar-chart\n",
       "line": 2,
       "selection": {
         "start": {
@@ -19,8 +19,8 @@
     },
     {
       "file": "src/modular_spaceflights/pipelines/reporting/nodes.py",
-      "description": "### Preparing the histogram\n\n- In order to render this plot we provide a DataFrame that is easy to work with\n- This is a simple example, the `make_cancel_policy_bar_chart()` method below demonstrates a more realistic example where some transformation is required before rendering the plot",
-      "line": 11,
+      "description": "### Preparing the bar chart\n\n- In order to render this plot we provide a DataFrame that is easy to work with\n- This function simply uses pandas to aggregate the data in a way ready for plotting",
+      "line": 14,
       "selection": {
         "start": {
           "line": 25,
@@ -30,7 +30,23 @@
           "line": 25,
           "character": 33
         }
-      }
+      },
+      "title": "Perparing the bar chart"
+    },
+    {
+      "file": "conf/base/catalog_08_reporting.yml",
+      "description": "### YAML API definition\n- Here we declare the plotting parameters in the catalog\n- These are simply passed to the `plotly.express` module as keyword arguments",
+      "line": 5
+    },
+    {
+      "file": "conf/base/catalog_08_reporting.yml",
+      "description": "## Declaring a `plotly.JSONDataSet`\n\n- This will accept a python Plotly Object\n- It will then serialise the outputs to JSON\n- This is renderable in Kedro-Viz",
+      "line": 16
+    },
+    {
+      "file": "src/modular_spaceflights/pipelines/reporting/nodes.py",
+      "description": "### Python API definition\n\n- Alternateively, you can use the plotly express python API\n- Provide the arguments explicitly (or via Kedro Parameters)\n- Return a `plotly_object` from the function",
+      "line": 62
     },
     {
       "file": "src/modular_spaceflights/pipelines/reporting/pipeline.py",
