@@ -31,7 +31,7 @@
           "character": 33
         }
       },
-      "title": "Perparing the bar chart"
+      "title": "Preparing the bar chart"
     },
     {
       "file": "conf/base/catalog_08_reporting.yml",
@@ -40,12 +40,12 @@
     },
     {
       "file": "conf/base/catalog_08_reporting.yml",
-      "description": "## Declaring a `plotly.JSONDataSet`\n\n- This will accept a python Plotly Object\n- It will then serialise the outputs to JSON\n- This is renderable in Kedro-Viz",
+      "description": "## Declaring a `plotly.JSONDataSet`\n\n- This will accept a python Plotly Object\n- It will then serialise the outputs to JSON\n- This is render-able in Kedro-Viz",
       "line": 16
     },
     {
       "file": "src/modular_spaceflights/pipelines/reporting/nodes.py",
-      "description": "### Python API definition\n\n- Alternateively, you can use the plotly express python API\n- Provide the arguments explicitly (or via Kedro Parameters)\n- Return a `plotly_object` from the function",
+      "description": "### Python API definition\n\n- Alternatively, you can use the plotly express python API\n- Provide the arguments explicitly (or via Kedro Parameters)\n- Return a `plotly_object` from the function",
       "line": 60
     },
     {
