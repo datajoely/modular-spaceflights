@@ -1,6 +1,6 @@
 """
 This is a boilerplate pipeline 'reporting'
-generated using Kedro 0.17.5
+generated using Kedro 0.17.6
 """
 
 from kedro.pipeline import Pipeline, node

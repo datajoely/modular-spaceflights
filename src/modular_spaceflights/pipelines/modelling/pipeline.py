@@ -1,5 +1,3 @@
-from functools import reduce
-from operator import add
 from typing import List
 
 from kedro.pipeline import Pipeline, node
@@ -96,7 +94,7 @@ def new_modeling_pipeline(model_types: List[str]) -> Pipeline:
     ]
 
     # Combine modeling pipeliens into one pipeline object
-    all_modeling_pipelines = reduce(add, model_pipelines)
+    all_modeling_pipelines = sum(model_pipelines)
 
     # Namespace consolidated modeling pipelines
     consolidated_model_pipelines = pipeline(
