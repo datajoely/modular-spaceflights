@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "03 Running the models 🧠",
+  "title": "03 Constructing the models 🧠",
   "steps": [
     {
       "file": "src/modular_spaceflights/pipeline_registry.py",

@@ -1,11 +1,11 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "06 Custom DataSets 💾",
+  "title": "05 Custom DataSets 💾",
   "steps": [
     {
       "file": "conf/base/catalog_08_reporting.yml",
       "description": "### Referencing a custom dataset by class path\n\n- For full instructions read [this tutorial](https://kedro.readthedocs.io/en/stable/07_extend_kedro/03_custom_datasets.html)\n- Custom datasets can be defined by extending existing classes or implementing new ones against our `AbstractDataSet` or `AbstractVersionedDataSet` interfaces\n- To use these within your Kedro projects they need to be accessible via a classpath either as source code or an installed library\n- You can debug classpath issues by jumping into a `kedro ipython` session and trying to `importlib.import_module` the class since that's all Kedro does behind the scenes :) \n- The custom DataSet used in this tutorial is located at the following location and allows us to read/write PNG image files using the [Pillow](https://pillow.readthedocs.io/en/stable/reference/Image.html) library.\n\n```bash\nsrc\n└── modular_spaceflights\n    └── extras\n        └── datasets\n            ├── __init__.py\n            └── image_dataset.py\n```",
-      "line": 27
+      "line": 21
     },
     {
       "file": "src/modular_spaceflights/extras/datasets/image_dataset.py",

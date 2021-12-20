@@ -5,7 +5,7 @@ generated using Kedro 0.17.6
 import pandas as pd
 import PIL
 import plotly.express as px
-from plotly.basedatatypes import BaseFigure
+from plotly import graph_objects as go
 
 from .image_utils import DrawTable
 
@@ -44,7 +44,7 @@ def make_cancel_policy_bar_chart(
     return country_policy_df[high_value_filter]
 
 
-def make_price_histogram(model_input_data: pd.DataFrame) -> BaseFigure:
+def make_price_histogram(model_input_data: pd.DataFrame) -> go.Figure:
     """This function retrieves the two key columns needed to visualise the
     price-engine histogram. We then prepare the Plotly figure using the
     Plotly Python API

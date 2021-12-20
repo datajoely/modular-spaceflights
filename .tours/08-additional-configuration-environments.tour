@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "08 Additional Configuration Environments ⚙️",
+  "title": "07 Additional Configuration Environments ⚙️",
   "steps": [
     {
       "directory": "conf/base",

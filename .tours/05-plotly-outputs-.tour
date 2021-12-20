@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "05 Plotly plots in Kedro Viz 📈",
+  "title": "04 Plotly plots in Kedro Viz 📈",
   "steps": [
     {
       "file": "conf/base/catalog_08_reporting.yml",

@@ -1,6 +1,6 @@
 {
   "$schema": "https://aka.ms/codetour-schema",
-  "title": "07 Custom Hooks 🎣",
+  "title": "06 Custom Hooks 🎣",
   "steps": [
     {
       "title": "Hooks allow us to add extensions to the lifecycle of a Kedro run",
