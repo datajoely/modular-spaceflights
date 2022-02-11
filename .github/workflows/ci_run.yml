@@ -1,0 +1,28 @@
+name: kedro_run
+
+on:
+  push:
+    branches: 
+      - "*"
+
+jobs:   
+  kedro_run:
+    name: kedro_run
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out
+        uses: actions/checkout@main
+
+      - uses: actions/setup-python@v1
+        with:
+          python-version: "3.8.x"
+
+      - name: Install dependencies
+        run: |
+          pip install kedro==0.17.6
+          kedro build-reqs
+          kedro install
+          
+      - name: Kedro run
+        run: kedro run
