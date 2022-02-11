@@ -62,7 +62,7 @@ def _create_metric_column(
 
 
 def create_derived_features(
-    spine_df: pd.DataFrame, data: pd.DataFrame, derived_params: Dict[str, str]
+    spine_df: pd.DataFrame, data: pd.DataFrame, derived_params: List[Dict[str, str]]
 ) -> pd.DataFrame:
     """[summary]
 
