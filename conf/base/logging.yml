@@ -9,10 +9,8 @@ formatters:
 
 handlers:
     console:
-        class: logging.StreamHandler
+        class: rich.logging.RichHandler
         level: INFO
-        formatter: simple
-        stream: ext://sys.stdout
 
     info_file_handler:
         class: logging.handlers.RotatingFileHandler
@@ -60,6 +58,12 @@ loggers:
         level: INFO
         handlers: [journal_file_handler]
         propagate: no
+
+    kedro.framework:
+        level: INFO
+        handlers: [console]
+        propagate: no
+
 
 root:
     level: INFO
