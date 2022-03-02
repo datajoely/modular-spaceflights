@@ -5,8 +5,7 @@ isort~=5.0
 jupyter~=1.0
 jupyter_client>=5.1, <7.0
 jupyterlab~=3.0
-kedro==0.17.6
-kedro[pandas.CSVDataSet,pandas.ExcelDataSet, pandas.ParquetDataSet, plotly.PlotlyDataSet]==0.17.6
+kedro[pandas.CSVDataSet,pandas.ExcelDataSet, pandas.ParquetDataSet, plotly.PlotlyDataSet]==0.17.7
 nbstripout~=0.4
 pytest-cov~=2.5
 pytest-mock>=1.7.1, <2.0
@@ -19,3 +18,4 @@ matplotlib==3.5.0
 pre-commit~=1.17
 kedro-viz
 kedro-telemetry
+rich==11.2.0
