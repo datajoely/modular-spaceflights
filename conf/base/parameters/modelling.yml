@@ -9,7 +9,6 @@ model_options:
     class: LinearRegression
     kwargs:
       fit_intercept: True
-      normalize: False
       copy_X: True
       positive: False
   random_forest:
@@ -17,7 +16,7 @@ model_options:
     class: RandomForestRegressor
     kwargs:
       n_estimators: 100
-      criterion: "mse"
+      criterion: "squared_error"
       min_samples_split: 2
       min_samples_leaf: 1
       min_weight_fraction_leaf: 0
